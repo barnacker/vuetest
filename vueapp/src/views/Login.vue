@@ -3,9 +3,9 @@
     <v-slide-y-transition mode="out-in">
       <v-layout column align-center>
         <v-form
-          v-if="!loading"
+          v-if="!authenticating"
           v-model="valid"
-          @submit.prevent="signup">
+          @submit.prevent="login">
           <v-text-field
             v-model="user.username"
             :rules="[notEmptyRules]"
@@ -22,11 +22,34 @@
           <v-btn type="submit" :disabled="!valid">Login</v-btn>
         </v-form>
         <v-progress-circular
-          v-if="loading"
+          v-if="authenticating"
           indeterminate
           color="primary"
         ></v-progress-circular>
+        <v-dialog
+          v-model="dialog"
+          max-width="290"
+        >
+          <v-card>
+            <v-card-title class="headline">
+              <v-icon large>error</v-icon>
+              Authentication Error
+            </v-card-title>
 
+            <v-card-text>{{authErr}}</v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="green darken-1"
+                flat="flat"
+                @click="dialog = false"
+              >
+                OK
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-layout>
     </v-slide-y-transition>
   </v-container>
@@ -34,12 +57,15 @@
 
 <script>
 
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
-  name: 'signup',
+  name: 'login',
+  // eslint-disable-next-line
   data: vm => ({
     valid: false,
+    dialog: false,
+    authErr: '',
     user: {
       username: '',
       password: '',
@@ -47,18 +73,23 @@ export default {
     notEmptyRules: value => !!value || 'Cannot be empty',
   }),
   computed: {
-    ...mapState('users', { loading: 'isCreatePending' }),
+    ...mapState('auth', { authenticating: 'isAuthenticatePending' }),
   },
   methods: {
-    signup() {
+    ...mapActions('auth', ['authenticate']),
+    login() {
       if (this.valid) {
-        const { User } = this.$FeathersVuex;
-        const user = new User(this.user);
-        user.save()
-          .then((userIn) => {
-            console.log(userIn);
-            this.$router.push('/login');
-          }); // --> Creates the todo on the server.
+        // Authenticate with the local email/password strategy
+        this.authenticate({
+          strategy: 'local',
+          ...this.user,
+        }).then(() => {
+          // Logged in
+          this.$router.push('/boards');
+        }).catch((e) => {
+          this.authErr = e.message;
+          this.dialog = true;
+        });
       }
     },
   },

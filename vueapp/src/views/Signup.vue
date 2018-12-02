@@ -51,6 +51,7 @@ import { mapState } from 'vuex';
 
 export default {
   name: 'signup',
+  // eslint-disable-next-line
   data: vm => ({
     valid: false,
     user: {
@@ -71,8 +72,7 @@ export default {
         const { User } = this.$FeathersVuex;
         const user = new User(this.user);
         user.save()
-          .then((userIn) => {
-            console.log(userIn);
+          .then(() => {
             this.$router.push('/login');
           }); // --> Creates the todo on the server.
       }
