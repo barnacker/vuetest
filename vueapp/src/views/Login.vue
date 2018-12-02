@@ -13,26 +13,13 @@
             required
           ></v-text-field>
           <v-text-field
-            v-model="user.displayname"
-            :rules="[notEmptyRules]"
-            label="Display Name"
-            required
-          ></v-text-field>
-          <v-text-field
             v-model="user.password"
             :rules="[notEmptyRules]"
             type="password"
             label="Password"
             required
           ></v-text-field>
-          <v-text-field
-            v-model="user.confirm_password"
-            :rules="[notEmptyRules, confirmPasswordRules]"
-            type="password"
-            label ="Confirm Password"
-            required
-          ></v-text-field>
-          <v-btn type="submit" :disabled="!valid">Sign up</v-btn>
+          <v-btn type="submit" :disabled="!valid">Login</v-btn>
         </v-form>
         <v-progress-circular
           v-if="loading"
@@ -56,11 +43,8 @@ export default {
     user: {
       username: '',
       password: '',
-      confirm_password: '',
-      displayname: '',
     },
     notEmptyRules: value => !!value || 'Cannot be empty',
-    confirmPasswordRules: value => value === vm.user.password || 'Password must match',
   }),
   computed: {
     ...mapState('users', { loading: 'isCreatePending' }),
