@@ -2,6 +2,7 @@
   <v-container fluid>
     <v-slide-y-transition mode="out-in">
       <v-layout column align-center>
+        <v-icon x-large v-if="!loading">face</v-icon>
         <v-form
           v-if="!loading"
           v-model="valid"
@@ -34,6 +35,9 @@
           ></v-text-field>
           <v-btn type="submit" :disabled="!valid">Sign up</v-btn>
         </v-form>
+        <h5 class="headline" v-if="loading">
+          Registering...
+        </h5>
         <v-progress-circular
           v-if="loading"
           indeterminate

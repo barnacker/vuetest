@@ -8,17 +8,3 @@
     </v-slide-y-transition>
   </v-container>
 </template>
-
-<script>
-export default {
-  name: 'signup',
-  data: () => ({
-    user: {
-      username: '',
-      password: '',
-      confirm_password: '',
-      displayname: '',
-    },
-  }),
-};
-</script>

@@ -2,6 +2,7 @@
   <v-container fluid>
     <v-slide-y-transition mode="out-in">
       <v-layout column align-center>
+        <v-icon x-large v-if="!authenticating">assignment_ind</v-icon>
         <v-form
           v-if="!authenticating"
           v-model="valid"
@@ -19,8 +20,13 @@
             label="Password"
             required
           ></v-text-field>
-          <v-btn type="submit" :disabled="!valid">Login</v-btn>
+          <div class="text-xs-center">
+            <v-btn type="submit" :disabled="!valid">Login</v-btn>
+          </div>
         </v-form>
+        <h5 class="headline" v-if="authenticating">
+          Authenticating...
+        </h5>
         <v-progress-circular
           v-if="authenticating"
           indeterminate
