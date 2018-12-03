@@ -5,9 +5,9 @@
           <span>VueApp </span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-toolbar-items>
-        <v-btn v-if="!connected" flat :to="{ name: 'login' }">Login</v-btn>
-        <v-btn v-if="!connected" flat :to="{ name: 'signup' }">Sign up</v-btn>
+      <v-toolbar-items v-if="!connected">
+        <v-btn flat :to="{ name: 'login' }">Login</v-btn>
+        <v-btn flat :to="{ name: 'signup' }">Sign up</v-btn>
       </v-toolbar-items>
       <v-menu offset-y v-if="connected">
         <v-btn

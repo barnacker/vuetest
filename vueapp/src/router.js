@@ -8,7 +8,7 @@ import Store from './store';
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -16,15 +16,6 @@ export default new Router({
       path: '/',
       name: 'home',
       component: Home,
-      beforeEnter(to, from, next) {
-        // Authenticate with the local email/password strategy
-        Store.dispatch('auth/authenticate').then(() => {
-          // Logged in
-          next('/boards');
-        }).catch(() => {
-          next('/login');
-        });
-      },
     },
     {
       path: '/signup',
@@ -43,3 +34,23 @@ export default new Router({
     },
   ],
 });
+
+// Global session route dispatching
+router.beforeEach((to, from, next) => {
+  // Authenticate with the local email/password strategy
+  Store.dispatch('auth/authenticate').then(() => {
+    if (['/', '/signup', '/login'].includes(to.path)) {
+      next('/boards');
+    } else {
+      next();
+    }
+  }).catch(() => {
+    if (['/', '/signup', '/login'].includes(to.path)) {
+      next();
+    } else {
+      next('/login');
+    }
+  });
+});
+
+export default router;

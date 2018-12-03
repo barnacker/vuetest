@@ -33,7 +33,9 @@
             label ="Confirm Password"
             required
           ></v-text-field>
-          <v-btn type="submit" :disabled="!valid">Sign up</v-btn>
+          <div class="text-xs-center">
+            <v-btn type="submit" :disabled="!valid">Sign up</v-btn>
+          </div>
         </v-form>
         <h5 class="headline" v-if="loading">
           Registering...
