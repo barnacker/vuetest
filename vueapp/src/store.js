@@ -23,6 +23,20 @@ export default new Vuex.Store({
         displayname: '',
       },
     }),
+    service('boards', {
+      instanceDefaults: {
+        name: '',
+        background: '',
+      },
+    }),
+    service('lists', {
+      instanceDefaults: {
+        name: '',
+        order: 0,
+        boardId: '',
+        archived: false,
+      },
+    }),
     // Setup the auth plugin.
     auth({
       userService: 'users',

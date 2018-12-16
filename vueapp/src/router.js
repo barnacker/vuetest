@@ -4,6 +4,7 @@ import Home from './views/Home.vue';
 import Signup from './views/Signup.vue';
 import Login from './views/Login.vue';
 import Boards from './views/Boards.vue';
+import Board from './views/Board.vue';
 import Store from './store';
 
 Vue.use(Router);
@@ -31,6 +32,11 @@ const router = new Router({
       path: '/boards',
       name: 'boards',
       component: Boards,
+    },
+    {
+      path: '/boards/:id',
+      name: 'board',
+      component: Board,
     },
   ],
 });
