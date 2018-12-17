@@ -53,10 +53,10 @@ export default {
     ...mapState('auth', {
       disconnecting: 'isLogoutPending',
       connected: 'user',
-      backArrow() {
-        return (Object.keys(this.$route.params).length !== 0);
-      },
     }),
+    backArrow() {
+      return (Object.keys(this.$route.params).length !== 0);
+    },
   },
   methods: {
     ...mapActions('auth', ['logout']),

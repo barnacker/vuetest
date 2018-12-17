@@ -2,9 +2,8 @@
   <v-container fluid>
     <v-slide-y-transition mode="out-in">
       <v-layout column align-center>
-        <v-icon x-large v-if="!loading">face</v-icon>
+        <v-icon x-large>face</v-icon>
         <v-form
-          v-if="!loading"
           v-model="valid"
           @submit.prevent="signup">
           <v-text-field
@@ -12,12 +11,14 @@
             :rules="[notEmptyRules]"
             label="User"
             required
+            :disabled="loading"
           ></v-text-field>
           <v-text-field
             v-model="user.displayname"
             :rules="[notEmptyRules]"
             label="Display Name"
             required
+            :disabled="loading"
           ></v-text-field>
           <v-text-field
             v-model="user.password"
@@ -25,6 +26,7 @@
             type="password"
             label="Password"
             required
+            :disabled="loading"
           ></v-text-field>
           <v-text-field
             v-model="user.confirm_password"
@@ -32,20 +34,18 @@
             type="password"
             label ="Confirm Password"
             required
+            :disabled="loading"
           ></v-text-field>
           <div class="text-xs-center">
-            <v-btn type="submit" :disabled="!valid">Sign up</v-btn>
+            <v-btn
+              type="submit"
+              :loading="loading"
+              :disabled="!valid || loading"
+            >
+            Sign up
+            </v-btn>
           </div>
         </v-form>
-        <h5 class="headline" v-if="loading">
-          Registering...
-        </h5>
-        <v-progress-circular
-          v-if="loading"
-          indeterminate
-          color="primary"
-        ></v-progress-circular>
-
       </v-layout>
     </v-slide-y-transition>
   </v-container>

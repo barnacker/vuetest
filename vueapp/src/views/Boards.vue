@@ -1,5 +1,5 @@
 <template>
-  <v-container grid-list-md fluid>
+  <v-container grid-list-md fluid @click="createMode = false">
     <v-layout justify-start wrap v-if="!loading">
       <v-flex xs12 sm6 md4 lg2 xl1 v-for="board in boards" :key="board._id">
         <v-card>
@@ -33,7 +33,7 @@
           @submit.prevent="createBoard"
           @keydown.prevent.enter
         >
-          <v-card @click="createMode = !createMode">
+          <v-card @click.stop="createMode = true">
             <v-card-title>
               <div>
                 <h3
@@ -71,27 +71,24 @@
         </v-form>
       </v-flex>
     </v-layout>
-    <v-layout row v-if="loading">
-      <v-flex xs4>
+    <v-layout row v-if="loading" text-xs-center>
+      <v-flex xs12>
         <v-card>
-          <v-img
-            :src="require('../assets/logo.svg')"
-            class="my-3"
-            contain
-            height="200"
-          ></v-img>
-          <div class="text-xs-center">
-            <v-progress-circular
-              indeterminate
-              color="primary"
-            ></v-progress-circular>
-          </div>
           <v-card-title primary-title>
-            <div>
-              <h3 class="headline mb-0">Wecome!</h3>
-              <div>Loading Boards...</div>
-            </div>
+            <v-img
+              :src="require('../assets/logo.svg')"
+              class="my-3"
+              contain
+              height="200"
+            ></v-img>
           </v-card-title>
+          <v-card-text>
+            <v-progress-circular
+                indeterminate
+                color="primary"
+            ></v-progress-circular>
+            Loading Boards...
+          </v-card-text>
         </v-card>
       </v-flex>
     </v-layout>
@@ -114,14 +111,28 @@ export default {
     notEmptyRules: value => !!value || 'Cannot be empty',
   }),
   mounted() {
-    this.findBoards({ query: {} });
+    this.findBoards({
+      query: {
+        // eslint-disable-next-line
+        ownerId: this.user._id,
+      },
+    });
   },
   computed: {
+    ...mapState('auth', { user: 'user' }),
     ...mapState('boards', { creating: 'isCreatePending' }),
     ...mapState('boards', { loading: 'isFindPending' }),
     ...mapGetters('boards', { findBoardsInStore: 'find' }),
     boards() {
-      return this.findBoardsInStore({ query: {} }).data;
+      if (this.user) {
+        return this.findBoardsInStore({
+          query: {
+            // eslint-disable-next-line
+            ownerId: this.user._id,
+          },
+        }).data;
+      }
+      return {};
     },
     diplayMode() {
       const binding = {};
