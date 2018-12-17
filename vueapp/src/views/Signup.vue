@@ -21,6 +21,13 @@
             :disabled="loading"
           ></v-text-field>
           <v-text-field
+            v-model="user.email"
+            :rules="[notEmptyRules,validEmail]"
+            label="email"
+            required
+            :disabled="loading"
+          ></v-text-field>
+          <v-text-field
             v-model="user.password"
             :rules="[notEmptyRules]"
             type="password"
@@ -62,12 +69,17 @@ export default {
     valid: false,
     user: {
       username: '',
+      email: '',
       password: '',
       confirm_password: '',
       displayname: '',
     },
     notEmptyRules: value => !!value || 'Cannot be empty',
     confirmPasswordRules: value => value === vm.user.password || 'Password must match',
+    validEmail: (value) => {
+      const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return pattern.test(value) || 'Invalid e-mail.';
+    },
   }),
   computed: {
     ...mapState('users', { loading: 'isCreatePending' }),

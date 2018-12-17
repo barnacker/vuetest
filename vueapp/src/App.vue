@@ -17,12 +17,15 @@
         <v-btn flat :to="{ name: 'login' }">Login</v-btn>
         <v-btn flat :to="{ name: 'signup' }">Sign up</v-btn>
       </v-toolbar-items>
+      <v-avatar :size="36" v-if="connected">
+            <v-gravatar :email="connected.email"/>
+      </v-avatar>
       <v-menu offset-y v-if="connected">
         <v-btn
           flat
           slot="activator"
         >
-          <v-icon>face</v-icon>&nbsp;{{connected.displayname}}<v-icon>arrow_drop_down</v-icon>
+          &nbsp;{{connected.displayname}}<v-icon right>arrow_drop_down</v-icon>
         </v-btn>
         <v-list>
           <v-list-tile @click="disconnect">

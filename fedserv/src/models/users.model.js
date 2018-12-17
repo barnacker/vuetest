@@ -8,7 +8,7 @@ module.exports = function (app) {
   
     username: {type: String, unique: true, lowercase: true},
     displayname: {type: String},
-    imageUrl: {type: String},
+    email: {type: String},
     password: {type: String},
   }, {
     timestamps: true

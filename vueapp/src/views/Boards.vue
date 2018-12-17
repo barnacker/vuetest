@@ -13,6 +13,14 @@
               <v-flex xs12 align-end flexbox>
                 <span class="headline">{{board.name}}</span>
               </v-flex>
+              <v-btn
+                icon
+                flat
+                color="white"
+                @click="removeBoard(board._id)"
+              >
+                <v-icon>delete_forever</v-icon>
+              </v-btn>
             </v-layout>
           </v-container>
           </v-img>
@@ -22,7 +30,6 @@
               color="secondary"
               :to="{ name: 'board', params: { id: board._id}}"
             >Edit</v-btn>
-            <v-btn flat color="red" @click="removeBoard(board._id)">Delete</v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
@@ -33,7 +40,7 @@
           @submit.prevent="createBoard"
           @keydown.prevent.enter
         >
-          <v-card @click.stop="createMode = true">
+          <v-card @click.stop="createMode = true" :ripple="!createMode">
             <v-card-title>
               <div>
                 <h3
@@ -124,15 +131,12 @@ export default {
     ...mapState('boards', { loading: 'isFindPending' }),
     ...mapGetters('boards', { findBoardsInStore: 'find' }),
     boards() {
-      if (this.user) {
-        return this.findBoardsInStore({
-          query: {
-            // eslint-disable-next-line
-            ownerId: this.user._id,
-          },
-        }).data;
-      }
-      return {};
+      return this.user ? this.findBoardsInStore({
+        query: {
+          // eslint-disable-next-line
+          ownerId: this.user._id,
+        },
+      }).data : [];
     },
     diplayMode() {
       const binding = {};

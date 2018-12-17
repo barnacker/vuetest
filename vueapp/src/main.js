@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import Gravatar from 'vue-gravatar';
 import './plugins/vuetify';
 import App from './App.vue';
 import router from './router';
@@ -11,3 +12,5 @@ new Vue({
   store,
   render: h => h(App),
 }).$mount('#app');
+
+Vue.component('v-gravatar', Gravatar);
