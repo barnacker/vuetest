@@ -2,7 +2,15 @@
   <v-app>
     <v-toolbar dark color="primary" app>
       <v-toolbar-title class="headline text-uppercase">
-          <span>VueApp </span>
+        <v-btn
+          flat icon
+          v-if="backArrow"
+          class="hidden-xs-only"
+          @click="back()"
+        >
+          <v-icon>arrow_back</v-icon>
+        </v-btn>
+        <span>VueApp</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items v-if="!connected">
@@ -14,7 +22,7 @@
           flat
           slot="activator"
         >
-          <v-icon>face</v-icon>&nbsp;{{connected.displayname}}
+          <v-icon>face</v-icon>&nbsp;{{connected.displayname}}<v-icon>arrow_drop_down</v-icon>
         </v-btn>
         <v-list>
           <v-list-tile @click="disconnect">
@@ -38,17 +46,16 @@ import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'App',
-  components: {
-  },
-  data() {
-    return {
-      //
-    };
-  },
+  data: () => ({
+    //
+  }),
   computed: {
     ...mapState('auth', {
       disconnecting: 'isLogoutPending',
       connected: 'user',
+      backArrow() {
+        return (Object.keys(this.$route.params).length !== 0);
+      },
     }),
   },
   methods: {
@@ -59,6 +66,9 @@ export default {
       }).catch(() => {
         this.$router.push('/');
       });
+    },
+    back() {
+      this.$router.go(-1);
     },
   },
 };
