@@ -74,64 +74,64 @@
 </template>
 
 <script>
-  import { mapState, mapActions, mapGetters } from "vuex";
+import { mapState, mapActions, mapGetters } from 'vuex';
 
-  export default {
-    name: "board",
-    data: () => ({
-      valid: false,
-      validList: false,
-      createMode: false,
-      board: {},
-      list: {},
-      notEmptyRules: value => !!value || "Cannot be empty"
-    }),
-    mounted() {
-      this.getBoard(this.$route.params.id).then(response => {
-        this.board = response.data || response;
-      });
-      this.findLists({
-        query: {
-          boardId: this.$route.params.id
-        }
-      });
-    },
-    computed: {
-      ...mapState("boards", { loadingBoard: "isGetPending" }),
-      ...mapState("lists", { creatingList: "isCreatePending" }),
-      ...mapState("lists", { loadingLists: "isFindPending" }),
-      ...mapGetters("lists", { findListsInStore: "find" }),
-      lists() {
-        return this.findListsInStore({
-          query: {
-            boardId: this.$route.params.id
-          }
-        }).data;
-      }
-    },
-    methods: {
-      ...mapActions("lists", { removeList: "remove" }),
-      ...mapActions("lists", { findLists: "find" }),
-      ...mapActions("boards", { getBoard: "get" }),
-      ...mapActions("boards", { patchBoard: "patch" }),
-      myPatch() {
-        // eslint-disable-next-line
-        if (this.board._id) {
-          // eslint-disable-next-line
-          let id = this.board._id;
-          this.patchBoard([id, { name: this.board.name }, {}]);
-        }
+export default {
+  name: 'board',
+  data: () => ({
+    valid: false,
+    validList: false,
+    createMode: false,
+    board: {},
+    list: {},
+    notEmptyRules: value => !!value || 'Cannot be empty',
+  }),
+  mounted() {
+    this.getBoard(this.$route.params.id).then((response) => {
+      this.board = response.data || response;
+    });
+    this.findLists({
+      query: {
+        boardId: this.$route.params.id,
       },
-      createList() {
-        if (this.validList) {
-          const { List } = this.$FeathersVuex;
-          const list = new List(this.list);
-          list.boardId = this.$route.params.id;
-          list.save().then(() => {
-            this.$refs.form.reset();
-          });
-        }
+    });
+  },
+  computed: {
+    ...mapState('boards', { loadingBoard: 'isGetPending' }),
+    ...mapState('lists', { creatingList: 'isCreatePending' }),
+    ...mapState('lists', { loadingLists: 'isFindPending' }),
+    ...mapGetters('lists', { findListsInStore: 'find' }),
+    lists() {
+      return this.findListsInStore({
+        query: {
+          boardId: this.$route.params.id,
+        },
+      }).data;
+    },
+  },
+  methods: {
+    ...mapActions('lists', { removeList: 'remove' }),
+    ...mapActions('lists', { findLists: 'find' }),
+    ...mapActions('boards', { getBoard: 'get' }),
+    ...mapActions('boards', { patchBoard: 'patch' }),
+    myPatch() {
+      // eslint-disable-next-line
+        if (this.board._id) {
+        // eslint-disable-next-line
+          let id = this.board._id;
+        this.patchBoard([id, { name: this.board.name }, {}]);
       }
-    }
-  };
+    },
+    createList() {
+      if (this.validList) {
+        const { List } = this.$FeathersVuex;
+        const list = new List(this.list);
+        list.boardId = this.$route.params.id;
+        list.save().then(() => {
+          this.$refs.form.reset();
+        });
+      }
+    },
+  },
+};
 </script>

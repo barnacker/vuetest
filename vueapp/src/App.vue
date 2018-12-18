@@ -43,36 +43,36 @@
 </template>
 
 <script>
-  import { mapState, mapActions } from "vuex";
+import { mapState, mapActions } from 'vuex';
 
-  export default {
-    name: "App",
-    data: () => ({
-      //
+export default {
+  name: 'App',
+  data: () => ({
+    //
+  }),
+  computed: {
+    ...mapState('auth', {
+      disconnecting: 'isLogoutPending',
+      connected: 'user',
     }),
-    computed: {
-      ...mapState("auth", {
-        disconnecting: "isLogoutPending",
-        connected: "user"
-      }),
-      backArrow() {
-        return Object.keys(this.$route.params).length !== 0;
-      }
+    backArrow() {
+      return Object.keys(this.$route.params).length !== 0;
     },
-    methods: {
-      ...mapActions("auth", ["logout"]),
-      disconnect() {
-        this.logout()
-          .then(() => {
-            this.$router.push("/");
-          })
-          .catch(() => {
-            this.$router.push("/");
-          });
-      },
-      back() {
-        this.$router.go(-1);
-      }
-    }
-  };
+  },
+  methods: {
+    ...mapActions('auth', ['logout']),
+    disconnect() {
+      this.logout()
+        .then(() => {
+          this.$router.push('/');
+        })
+        .catch(() => {
+          this.$router.push('/');
+        });
+    },
+    back() {
+      this.$router.go(-1);
+    },
+  },
+};
 </script>

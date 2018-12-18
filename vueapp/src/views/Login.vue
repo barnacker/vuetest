@@ -51,43 +51,43 @@
 </template>
 
 <script>
-  import { mapState, mapActions } from "vuex";
+import { mapState, mapActions } from 'vuex';
 
-  export default {
-    name: "login",
-    // eslint-disable-next-line
+export default {
+  name: 'login',
+  // eslint-disable-next-line
     data: vm => ({
-      valid: false,
-      dialog: false,
-      authErr: "",
-      user: {
-        username: "",
-        password: ""
-      },
-      notEmptyRules: value => !!value || "Cannot be empty"
-    }),
-    computed: {
-      ...mapState("auth", { authenticating: "isAuthenticatePending" })
+    valid: false,
+    dialog: false,
+    authErr: '',
+    user: {
+      username: '',
+      password: '',
     },
-    methods: {
-      ...mapActions("auth", ["authenticate"]),
-      login() {
-        if (this.valid) {
-          // Authenticate with the local email/password strategy
-          this.authenticate({
-            strategy: "local",
-            ...this.user
+    notEmptyRules: value => !!value || 'Cannot be empty',
+  }),
+  computed: {
+    ...mapState('auth', { authenticating: 'isAuthenticatePending' }),
+  },
+  methods: {
+    ...mapActions('auth', ['authenticate']),
+    login() {
+      if (this.valid) {
+        // Authenticate with the local email/password strategy
+        this.authenticate({
+          strategy: 'local',
+          ...this.user,
+        })
+          .then(() => {
+            // Logged in
+            this.$router.push('/boards');
           })
-            .then(() => {
-              // Logged in
-              this.$router.push("/boards");
-            })
-            .catch(e => {
-              this.authErr = e.message;
-              this.dialog = true;
-            });
-        }
+          .catch((e) => {
+            this.authErr = e.message;
+            this.dialog = true;
+          });
       }
-    }
-  };
+    },
+  },
+};
 </script>
