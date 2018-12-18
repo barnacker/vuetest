@@ -25,4 +25,5 @@
         }
     },
     "vetur.format.defaultFormatter.js": "prettier-eslint",
+    "eslint.autoFixOnSave": true,
 }

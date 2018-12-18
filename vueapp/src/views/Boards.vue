@@ -115,11 +115,11 @@ export default {
     boards() {
       return this.user
         ? this.findBoardsInStore({
-            query: {
-              // eslint-disable-next-line
+          query: {
+            // eslint-disable-next-line
               ownerId: this.user._id,
-            },
-          }).data
+          },
+        }).data
         : [];
     },
     diplayMode() {
