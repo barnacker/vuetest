@@ -12,4 +12,7 @@
         }
     },
     "vetur.format.defaultFormatter.js": "prettier-eslint",
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": true,
+    "eslint.autoFixOnSave": true,
 }

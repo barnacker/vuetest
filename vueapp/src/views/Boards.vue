@@ -1,6 +1,6 @@
 <template>
   <v-container grid-list-md fluid @click="createMode = false">
-    <v-layout v-if="!loading" justify-start wrap>
+    <v-layout v-if="!loading" wrap justify-start>
       <v-flex xs12 sm6 v-for="board in boards" md4 :key="board._id" lg2 xl1>
         <v-card>
           <v-img class="white--text" height="200px" :src="board.background">
