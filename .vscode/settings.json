@@ -1,0 +1,15 @@
+{
+    "git.ignoreLimitWarning": true,
+    "editor.formatOnSave": true,
+    "[javascript]": {
+        "editor.formatOnSave": false
+    },
+    "editor.mouseWheelZoom": true,
+    "vetur.trace.server": "verbose",
+    "vetur.format.defaultFormatterOptions": {
+        "prettyhtml": {
+            "printWidth": 80,
+        }
+    },
+    "vetur.format.defaultFormatter.js": "prettier-eslint",
+}
