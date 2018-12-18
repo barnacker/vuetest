@@ -3,11 +3,7 @@
     <v-slide-y-transition mode="out-in">
       <v-layout column align-center>
         <v-icon x-large>assignment_ind</v-icon>
-        <v-form
-          v-model="valid"
-          @submit.prevent="login"
-          @keydown.enter.prevent
-        >
+        <v-form v-model="valid" @submit.prevent="login" @keydown.enter.prevent>
           <v-text-field
             v-model="user.username"
             :rules="[notEmptyRules]"
@@ -28,19 +24,13 @@
               type="submit"
               :loading="authenticating"
               :disabled="!valid || authenticating"
-            >
-            Login
-            </v-btn>
+            >Login</v-btn>
           </div>
         </v-form>
-        <v-dialog
-          v-model="dialog"
-          max-width="290"
-        >
+        <v-dialog v-model="dialog" max-width="290">
           <v-card>
             <v-card-title class="headline">
-              <v-icon large>error</v-icon>
-              Authentication Error
+              <v-icon large>error</v-icon>Authentication Error
             </v-card-title>
 
             <v-card-text>{{authErr}}</v-card-text>
@@ -51,9 +41,7 @@
                 color="green darken-1"
                 flat="flat"
                 @click="dialog = false"
-              >
-                OK
-              </v-btn>
+              >OK</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -63,42 +51,43 @@
 </template>
 
 <script>
+  import { mapState, mapActions } from "vuex";
 
-import { mapState, mapActions } from 'vuex';
-
-export default {
-  name: 'login',
-  // eslint-disable-next-line
-  data: vm => ({
-    valid: false,
-    dialog: false,
-    authErr: '',
-    user: {
-      username: '',
-      password: '',
+  export default {
+    name: "login",
+    // eslint-disable-next-line
+    data: vm => ({
+      valid: false,
+      dialog: false,
+      authErr: "",
+      user: {
+        username: "",
+        password: ""
+      },
+      notEmptyRules: value => !!value || "Cannot be empty"
+    }),
+    computed: {
+      ...mapState("auth", { authenticating: "isAuthenticatePending" })
     },
-    notEmptyRules: value => !!value || 'Cannot be empty',
-  }),
-  computed: {
-    ...mapState('auth', { authenticating: 'isAuthenticatePending' }),
-  },
-  methods: {
-    ...mapActions('auth', ['authenticate']),
-    login() {
-      if (this.valid) {
-        // Authenticate with the local email/password strategy
-        this.authenticate({
-          strategy: 'local',
-          ...this.user,
-        }).then(() => {
-          // Logged in
-          this.$router.push('/boards');
-        }).catch((e) => {
-          this.authErr = e.message;
-          this.dialog = true;
-        });
+    methods: {
+      ...mapActions("auth", ["authenticate"]),
+      login() {
+        if (this.valid) {
+          // Authenticate with the local email/password strategy
+          this.authenticate({
+            strategy: "local",
+            ...this.user
+          })
+            .then(() => {
+              // Logged in
+              this.$router.push("/boards");
+            })
+            .catch(e => {
+              this.authErr = e.message;
+              this.dialog = true;
+            });
+        }
       }
-    },
-  },
-};
+    }
+  };
 </script>

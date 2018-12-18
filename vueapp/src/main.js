@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import Gravatar from 'vue-gravatar';
+import Gravatar from 'vue-gravatar'; // https://www.npmjs.com/package/vue-gravatar
 import './plugins/vuetify';
 import App from './App.vue';
 import router from './router';

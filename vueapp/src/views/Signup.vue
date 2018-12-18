@@ -3,9 +3,7 @@
     <v-slide-y-transition mode="out-in">
       <v-layout column align-center>
         <v-icon x-large>face</v-icon>
-        <v-form
-          v-model="valid"
-          @submit.prevent="signup">
+        <v-form v-model="valid" @submit.prevent="signup">
           <v-text-field
             v-model="user.username"
             :rules="[notEmptyRules]"
@@ -39,7 +37,7 @@
             v-model="user.confirm_password"
             :rules="[notEmptyRules, confirmPasswordRules]"
             type="password"
-            label ="Confirm Password"
+            label="Confirm Password"
             required
             :disabled="loading"
           ></v-text-field>
@@ -48,9 +46,7 @@
               type="submit"
               :loading="loading"
               :disabled="!valid || loading"
-            >
-            Sign up
-            </v-btn>
+            >Sign up</v-btn>
           </div>
         </v-form>
       </v-layout>
@@ -59,7 +55,6 @@
 </template>
 
 <script>
-
 import { mapState } from 'vuex';
 
 export default {
@@ -75,8 +70,9 @@ export default {
       displayname: '',
     },
     notEmptyRules: value => !!value || 'Cannot be empty',
-    confirmPasswordRules: value => value === vm.user.password || 'Password must match',
-    validEmail: (value) => {
+    confirmPasswordRules: value =>
+      value === vm.user.password || 'Password must match',
+    validEmail: value => {
       const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return pattern.test(value) || 'Invalid e-mail.';
     },
@@ -89,10 +85,9 @@ export default {
       if (this.valid) {
         const { User } = this.$FeathersVuex;
         const user = new User(this.user);
-        user.save()
-          .then(() => {
-            this.$router.push('/login');
-          }); // --> Creates the todo on the server.
+        user.save().then(() => {
+          this.$router.push('/login');
+        }); // --> Creates the todo on the server.
       }
     },
   },

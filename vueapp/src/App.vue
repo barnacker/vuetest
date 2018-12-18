@@ -3,7 +3,8 @@
     <v-toolbar dark color="primary" app>
       <v-toolbar-title class="headline text-uppercase">
         <v-btn
-          flat icon
+          flat
+          icon
           v-if="backArrow"
           class="hidden-xs-only"
           @click="back()"
@@ -18,14 +19,12 @@
         <v-btn flat :to="{ name: 'signup' }">Sign up</v-btn>
       </v-toolbar-items>
       <v-avatar :size="36" v-if="connected">
-            <v-gravatar :email="connected.email"/>
+        <v-gravatar :email="connected.email"/>
       </v-avatar>
       <v-menu offset-y v-if="connected">
-        <v-btn
-          flat
-          slot="activator"
-        >
-          &nbsp;{{connected.displayname}}<v-icon right>arrow_drop_down</v-icon>
+        <v-btn flat slot="activator">
+          &nbsp;{{connected.displayname}}
+          <v-icon right>arrow_drop_down</v-icon>
         </v-btn>
         <v-list>
           <v-list-tile @click="disconnect">
@@ -44,35 +43,36 @@
 </template>
 
 <script>
+  import { mapState, mapActions } from "vuex";
 
-import { mapState, mapActions } from 'vuex';
-
-export default {
-  name: 'App',
-  data: () => ({
-    //
-  }),
-  computed: {
-    ...mapState('auth', {
-      disconnecting: 'isLogoutPending',
-      connected: 'user',
+  export default {
+    name: "App",
+    data: () => ({
+      //
     }),
-    backArrow() {
-      return (Object.keys(this.$route.params).length !== 0);
+    computed: {
+      ...mapState("auth", {
+        disconnecting: "isLogoutPending",
+        connected: "user"
+      }),
+      backArrow() {
+        return Object.keys(this.$route.params).length !== 0;
+      }
     },
-  },
-  methods: {
-    ...mapActions('auth', ['logout']),
-    disconnect() {
-      this.logout().then(() => {
-        this.$router.push('/');
-      }).catch(() => {
-        this.$router.push('/');
-      });
-    },
-    back() {
-      this.$router.go(-1);
-    },
-  },
-};
+    methods: {
+      ...mapActions("auth", ["logout"]),
+      disconnect() {
+        this.logout()
+          .then(() => {
+            this.$router.push("/");
+          })
+          .catch(() => {
+            this.$router.push("/");
+          });
+      },
+      back() {
+        this.$router.go(-1);
+      }
+    }
+  };
 </script>

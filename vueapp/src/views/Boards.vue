@@ -1,28 +1,19 @@
 <template>
   <v-container grid-list-md fluid @click="createMode = false">
-    <v-layout justify-start wrap v-if="!loading">
-      <v-flex xs12 sm6 md4 lg2 xl1 v-for="board in boards" :key="board._id">
+    <v-layout v-if="!loading" justify-start wrap>
+      <v-flex xs12 sm6 v-for="board in boards" md4 :key="board._id" lg2 xl1>
         <v-card>
-          <v-img
-            class="white--text"
-            height="200px"
-            :src="board.background"
-          >
-          <v-container fill-height fluid>
-            <v-layout fill-height>
-              <v-flex xs12 align-end flexbox>
-                <span class="headline">{{board.name}}</span>
-              </v-flex>
-              <v-btn
-                icon
-                flat
-                color="white"
-                @click="removeBoard(board._id)"
-              >
-                <v-icon>delete_forever</v-icon>
-              </v-btn>
-            </v-layout>
-          </v-container>
+          <v-img class="white--text" height="200px" :src="board.background">
+            <v-container fill-height fluid>
+              <v-layout fill-height>
+                <v-flex xs12 align-end flexbox>
+                  <span class="headline">{{ board.name }}</span>
+                </v-flex>
+                <v-btn icon flat color="white" @click="removeBoard(board._id)">
+                  <v-icon>delete_forever</v-icon>
+                </v-btn>
+              </v-layout>
+            </v-container>
           </v-img>
           <v-card-actions>
             <v-btn
@@ -40,27 +31,24 @@
           @submit.prevent="createBoard"
           @keydown.prevent.enter
         >
-          <v-card @click.stop="createMode = true" :ripple="!createMode">
+          <v-card :ripple="!createMode" @click.stop="createMode = true">
             <v-card-title>
               <div>
-                <h3
-                  class="mb-0 grey--text"
-                >Create a board...
-                </h3>
+                <h3 class="mb-0 grey--text">Create a board...</h3>
                 <v-text-field
-                    v-if="createMode"
-                    v-model="board.name"
-                    :rules="[notEmptyRules]"
-                    label="Name"
-                    required
-                  ></v-text-field>
-                  <v-text-field
-                    v-if="createMode"
-                    v-model="board.background"
-                    :rules="[notEmptyRules]"
-                    label="Background"
-                    required
-                  ></v-text-field>
+                  v-if="createMode"
+                  v-model="board.name"
+                  :rules="[notEmptyRules]"
+                  label="Name"
+                  required
+                />
+                <v-text-field
+                  v-if="createMode"
+                  v-model="board.background"
+                  :rules="[notEmptyRules]"
+                  label="Background"
+                  required
+                />
               </div>
             </v-card-title>
             <v-card-actions v-if="createMode">
@@ -70,15 +58,13 @@
                 type="submit"
                 :loading="creating"
                 :disabled="!valid || creating"
-              >
-              Create
-              </v-btn>
+              >Create</v-btn>
             </v-card-actions>
           </v-card>
         </v-form>
       </v-flex>
     </v-layout>
-    <v-layout row v-if="loading" text-xs-center>
+    <v-layout v-if="loading" row text-xs-center>
       <v-flex xs12>
         <v-card>
           <v-card-title primary-title>
@@ -87,14 +73,11 @@
               class="my-3"
               contain
               height="200"
-            ></v-img>
+            />
           </v-card-title>
           <v-card-text>
-            <v-progress-circular
-                indeterminate
-                color="primary"
-            ></v-progress-circular>
-            Loading Boards...
+            <v-progress-circular indeterminate color="primary"/>
+            <span>Loading Boards...</span>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -103,11 +86,10 @@
 </template>
 
 <script>
-
 import { mapState, mapActions, mapGetters } from 'vuex';
 
 export default {
-  name: 'boards',
+  name: 'Boards',
   data: () => ({
     valid: false,
     createMode: false,
@@ -131,12 +113,14 @@ export default {
     ...mapState('boards', { loading: 'isFindPending' }),
     ...mapGetters('boards', { findBoardsInStore: 'find' }),
     boards() {
-      return this.user ? this.findBoardsInStore({
-        query: {
-          // eslint-disable-next-line
-          ownerId: this.user._id,
-        },
-      }).data : [];
+      return this.user
+        ? this.findBoardsInStore({
+            query: {
+              // eslint-disable-next-line
+              ownerId: this.user._id,
+            },
+          }).data
+        : [];
     },
     diplayMode() {
       const binding = {};
@@ -151,10 +135,9 @@ export default {
       if (this.valid) {
         const { Board } = this.$FeathersVuex;
         const board = new Board(this.board);
-        board.save()
-          .then(() => {
-            this.$refs.form.reset();
-          });
+        board.save().then(() => {
+          this.$refs.form.reset();
+        });
       }
     },
   },
