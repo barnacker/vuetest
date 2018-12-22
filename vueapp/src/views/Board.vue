@@ -15,7 +15,7 @@
         :rules="[notEmptyRules]"
         label="Name"
         required
-        @change="myPatch()"
+        :change="myPatch()"
       ></v-text-field>
     </v-form>
     <v-container fluid grid-list-md @click="createMode = false" pa-0>
@@ -116,9 +116,9 @@ export default {
     ...mapActions('boards', { patchBoard: 'patch' }),
     myPatch() {
       // eslint-disable-next-line
-        if (this.board._id) {
+      if (this.board._id) {
         // eslint-disable-next-line
-          let id = this.board._id;
+        let id = this.board._id;
         this.patchBoard([id, { name: this.board.name }, {}]);
       }
     },
