@@ -4,14 +4,18 @@
     flat
     ripple
     @click.stop="$emit('activateCreateMode')"
-    color="blue lighten-5"
     style="cursor: pointer;"
+    @mouseenter="cardHover = true"
+    @mouseleave="cardHover = false"
+    :color="cardHover ? 'blue lighten-4' : 'blue lighten-5'"
   >
-    <v-card-title>
-      <div>
-        <h3 class="mb-0 black--text">Create a board...</h3>
-      </div>
-    </v-card-title>
+    <v-container pa-1>
+      <v-layout column>
+        <v-flex>
+          <span class="caption ma-0">Add a board...</span>
+        </v-flex>
+      </v-layout>
+    </v-container>
   </v-card>
   <v-card v-else @click.stop="$emit('activateCreateMode')">
     <v-form
@@ -62,6 +66,7 @@ export default {
   name: 'board-create',
   props: ['createMode'],
   data: () => ({
+    cardHover: false,
     valid: false,
     board: {
       name: '',

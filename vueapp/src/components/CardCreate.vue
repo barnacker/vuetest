@@ -1,22 +1,22 @@
 <template>
   <v-card
-    v-if="!cardMode"
+    v-if="!localCardMode"
     flat
     ripple
-    @click.stop="cardMode = true"
+    @click.stop="activateCardMode"
     :color="cardHover ? 'grey lighten-1' : 'grey lighten-2'"
-    @mouseover="cardHover = true"
-    @mouseoout="cardHover = false"
+    @mouseenter="cardHover = true"
+    @mouseleave="cardHover = false"
   >
     <v-container pa-0>
       <v-layout>
-        <v-flex xs12 pl-1 pt-0>
+        <v-flex xs12 pl-2 pt-0>
           <span class="caption ma-0">Add a card...</span>
         </v-flex>
       </v-layout>
     </v-container>
   </v-card>
-  <v-card v-else flat @click.stop="cardMode = true" color="grey lighten-2">
+  <v-card v-else flat color="grey lighten-2">
     <v-container pa-0>
       <v-layout row>
         <v-flex xs12 pl-2 pr-2>
@@ -46,23 +46,33 @@
 
 <script>
 import { mapState } from 'vuex';
+import { log } from 'util';
 
 export default {
   name: 'card-create',
-  props: ['list'],
+  props: ['list', 'cardMode'],
   data: () => ({
     valid: false,
-    cardMode: false,
+    localCardMode: false,
     cardHover: false,
     card: {
       content: '',
     },
     notEmptyRules: value => !!value || 'Cannot be empty',
   }),
+  watch: {
+    cardMode(newVal) { // watch it
+      if (!newVal) { this.localCardMode = false; }
+    },
+  },
   computed: {
     ...mapState('cards', { creatingCard: 'isCreatePending' }),
   },
   methods: {
+    activateCardMode() {
+      this.localCardMode = true;
+      this.$emit('activateCardMode');
+    },
     createCard() {
       if (this.valid) {
         const { Card } = this.$FeathersVuex;

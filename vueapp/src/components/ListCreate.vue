@@ -4,23 +4,28 @@
     flat
     ripple
     @click.stop="$emit('activateCreateMode')"
-    color="blue lighten-5"
     style="cursor: pointer;"
+    pa-0
+    @mouseenter="cardHover = true"
+    @mouseleave="cardHover = false"
+    :color="cardHover ? 'grey lighten-5' : 'grey lighten-1'"
   >
-    <v-card-title>
-      <div>
-        <h3 class="mb-0 black--text">Create a list....</h3>
-      </div>
-    </v-card-title>
+    <v-container pa-1>
+      <v-layout column>
+        <v-flex>
+          <span class="caption ma-0">Add a list...</span>
+        </v-flex>
+      </v-layout>
+    </v-container>
   </v-card>
   <v-card v-else @click.stop="$emit('activateCreateMode')">
     <v-form
       ref="form"
       v-model="valid"
-      @submit.prevent="createBoard"
+      @submit.prevent="createList"
       @keydown.prevent.enter
     >
-      <v-card-title style="height: 200px">
+      <v-card-title>
         <v-container pa-0>
           <v-layout column>
             <v-flex>
@@ -53,7 +58,9 @@ export default {
   name: 'list-create',
   props: ['createMode', 'board'],
   data: () => ({
+    cardHover: false,
     valid: false,
+    list: {},
     notEmptyRules: value => !!value || 'Cannot be empty',
   }),
   computed: {
@@ -61,7 +68,7 @@ export default {
   },
   methods: {
     createList() {
-      if (this.validList) {
+      if (this.valid) {
         const { List } = this.$FeathersVuex;
         const list = new List(this.list);
         // eslint-disable-next-line

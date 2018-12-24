@@ -29,7 +29,11 @@
         >
           <v-layout align-start justify-start row wrap>
             <v-flex v-for="list in lists" :key="list._id" xs6 md2 xl1>
-              <list-card :list="list"/>
+              <list-card
+                :list="list"
+                :cardMode="cardMode"
+                v-on:activateCardMode="cardMode = true"
+              />
             </v-flex>
             <v-flex xs6 md2 xl1>
               <list-create
@@ -49,11 +53,13 @@
 import { mapState, mapActions, mapGetters } from 'vuex';
 import ListCard from '../components/ListCard.vue';
 import ListCreate from '../components/ListCreate.vue';
+import WaitBar from '../components/WaitBar.vue';
 
 
 export default {
   name: 'board',
   components: {
+    WaitBar,
     ListCard,
     ListCreate,
   },
@@ -78,7 +84,6 @@ export default {
   },
   computed: {
     ...mapState('boards', { loadingBoard: 'isGetPending' }),
-    ...mapState('lists', { creatingList: 'isCreatePending' }),
     ...mapState('lists', { loadingLists: 'isFindPending' }),
     ...mapGetters('lists', { findListsInStore: 'find' }),
     lists() {
@@ -90,7 +95,6 @@ export default {
     },
   },
   methods: {
-    ...mapActions('lists', { removeList: 'remove' }),
     ...mapActions('lists', { findLists: 'find' }),
     ...mapActions('boards', { getBoard: 'get' }),
     ...mapActions('boards', { patchBoard: 'patch' }),
