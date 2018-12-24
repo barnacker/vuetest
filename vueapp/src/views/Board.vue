@@ -112,6 +112,7 @@ export default {
     ...mapActions('lists', { findLists: 'find' }),
     ...mapActions('boards', { getBoard: 'get' }),
     ...mapActions('boards', { patchBoard: 'patch' }),
+    ...mapActions('cards', { patchCard: 'patch' }),
     myPatch() {
       // eslint-disable-next-line
         if (this.board._id) {
@@ -131,24 +132,18 @@ export default {
       }
     },
     startDraggingCard(card) {
-      log(`start:${card.listId}`);
       this.dragOrigin = card.listId;
       this.draggingCard = card;
     },
     dropDraggedCard(card) {
-      log(`drop:${card.listId}`);
-      card.save().then(() => {
-        this.draggingCard.listId = this.dragTarget;
+      // eslint-disable-next-line
+      this.patchCard([card._id, { listId: this.dragTarget }, {}]).then(() => {
         this.dragOrigin = '';
         this.dragTarget = '';
         this.draggingCard = null;
       });
     },
     dragOverList(event, list) {
-      // eslint-disable-next-line
-      //log(`dragging:${this.draggingCard.listId}`);
-      // eslint-disable-next-line
-      log(`target:${list._id}`);
       // eslint-disable-next-line
       this.dragTarget = list._id
       if (this.dragTarget !== this.dragOrigin) {
