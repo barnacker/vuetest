@@ -5,8 +5,7 @@
     pa-0
     :style="'background-image: url('+board.background+'); background-size:cover;'"
   >
-    <wait-bar v-if="loadingBoard" text="Loading Lists..."/>
-    <v-layout v-if="!loadingBoard" column>
+    <v-layout column>
       <v-flex xs12>
         <v-form v-model="valid" @keydown.prevent.enter>
           <v-text-field
@@ -19,8 +18,17 @@
             label="Name"
             required
             @change="myPatch()"
-          ></v-text-field>
+            :loading="loadingLists || loadingBoard"
+          >
+            <v-progress-linear
+              slot="progress"
+              height="2"
+              indeterminate
+              color="primary"
+            />
+          </v-text-field>
         </v-form>
+        <v-flex xs12 pa-0></v-flex>
         <v-container
           pt-0
           grid-list-md
@@ -31,7 +39,12 @@
             <v-flex v-for="list in lists" :key="list._id" xs6 md2 xl1>
               <list-card
                 :list="list"
+                :dragOrigin="dragOrigin"
+                :dragTarget="dragTarget"
                 v-on:deactivateCreateMode="createMode = false"
+                v-on:startDraggingCard="startDraggingCard"
+                v-on:dropDraggedCard="dropDraggedCard"
+                v-on:dragOverList="dragOverList"
               />
             </v-flex>
             <v-flex xs6 md2 xl1>
@@ -50,19 +63,20 @@
 
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex';
+import { log } from 'util';
 import ListCard from '../components/ListCard.vue';
 import ListCreate from '../components/ListCreate.vue';
-import WaitBar from '../components/WaitBar.vue';
-
 
 export default {
   name: 'board',
   components: {
-    WaitBar,
     ListCard,
     ListCreate,
   },
   data: () => ({
+    dragOrigin: '',
+    dragTarget: '',
+    draggingCard: null,
     valid: false,
     validList: false,
     createMode: false,
@@ -114,6 +128,31 @@ export default {
         list.save().then(() => {
           this.$refs.form.reset();
         });
+      }
+    },
+    startDraggingCard(card) {
+      log(`start:${card.listId}`);
+      this.dragOrigin = card.listId;
+      this.draggingCard = card;
+    },
+    dropDraggedCard(card) {
+      log(`drop:${card.listId}`);
+      card.save().then(() => {
+        this.draggingCard.listId = this.dragTarget;
+        this.dragOrigin = '';
+        this.dragTarget = '';
+        this.draggingCard = null;
+      });
+    },
+    dragOverList(event, list) {
+      // eslint-disable-next-line
+      //log(`dragging:${this.draggingCard.listId}`);
+      // eslint-disable-next-line
+      log(`target:${list._id}`);
+      // eslint-disable-next-line
+      this.dragTarget = list._id
+      if (this.dragTarget !== this.dragOrigin) {
+        event.preventDefault();
       }
     },
   },

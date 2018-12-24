@@ -1,5 +1,8 @@
 <template>
-  <v-card color="grey lighten-2">
+  <v-card
+    :color="(dragOrigin !== dragTarget && dragTarget===list._id ) ? 'green lighten-2': 'grey lighten-2' "
+    @dragover="$emit('dragOverList',$event, list)"
+  >
     <v-container pa-1>
       <v-layout justify-space-between row>
         <v-flex xs12 pl-3 pt-3>
@@ -14,8 +17,17 @@
     </v-container>
     <v-container pa-0>
       <v-layout column>
+        <v-flex v-if="loadingCard">
+          <v-layout column align-center>
+            <v-progress-circular indeterminate color="primary"/>
+          </v-layout>
+        </v-flex>
         <v-flex v-for="card in cards" :key="card._id" pl-2 pr-2 pb-1>
-          <v-card draggable>
+          <v-card
+            draggable
+            @dragstart="$emit('startDraggingCard',card)"
+            @dragend="$emit('dropDraggedCard',card)"
+          >
             <v-card-title class="caption">{{card.content}}</v-card-title>
           </v-card>
         </v-flex>
@@ -36,7 +48,7 @@ import CardCreate from './CardCreate.vue';
 
 export default {
   name: 'list-card',
-  props: ['list'],
+  props: ['list', 'dragOrigin', 'dragTarget'],
   components: {
     CardCreate,
   },

@@ -4,7 +4,7 @@
     flat
     ripple
     @click.stop="$emit('activateCreateMode')"
-    style="cursor: pointer;"
+    :style="'text-decoration: ' + (cardHover ? 'underline' : 'none') +'; cursor: pointer;'"
     pa-0
     @mouseenter="cardHover = true"
     @mouseleave="cardHover = false"

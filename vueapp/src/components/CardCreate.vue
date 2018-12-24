@@ -4,7 +4,8 @@
     flat
     ripple
     @click.stop="activateCardMode"
-    :color="cardHover ? 'grey lighten-1' : 'grey lighten-2'"
+    :color="cardHover ? 'grey lighten-4' : 'grey lighten-2'"
+    :style="'text-decoration: ' + (cardHover ? 'underline' : 'none') +'; cursor: pointer;'"
     @mouseenter="cardHover = true"
     @mouseleave="cardHover = false"
   >

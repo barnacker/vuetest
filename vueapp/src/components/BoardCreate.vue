@@ -3,11 +3,11 @@
     v-if="!createMode"
     flat
     ripple
-    @click.stop="$emit('activateCreateMode')"
-    style="cursor: pointer;"
+    @click.stop="$emit('activateCreateMode'), cardHover = false"
+    :style="'text-decoration: ' + (cardHover ? 'underline' : 'none') +'; cursor: pointer;'"
     @mouseenter="cardHover = true"
     @mouseleave="cardHover = false"
-    :color="cardHover ? 'blue lighten-4' : 'blue lighten-5'"
+    :color="cardHover ? 'grey lighten-2' : 'grey lighten-1'"
   >
     <v-container pa-1>
       <v-layout column>
