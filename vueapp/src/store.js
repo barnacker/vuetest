@@ -37,6 +37,14 @@ export default new Vuex.Store({
         archived: false,
       },
     }),
+    service('cards', {
+      instanceDefaults: {
+        content: '',
+        order: 0,
+        listId: '',
+        done: false,
+      },
+    }),
     // Setup the auth plugin.
     auth({
       userService: 'users',
