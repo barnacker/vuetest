@@ -9,7 +9,7 @@
   >
     <v-card-title>
       <div>
-        <h3 class="mb-0 black--text">Create a board...</h3>
+        <h3 class="mb-0 black--text">Create a list....</h3>
       </div>
     </v-card-title>
   </v-card>
@@ -25,20 +25,11 @@
           <v-layout column>
             <v-flex>
               <v-text-field
-                single
-                v-model="board.name"
+                v-model="list.name"
                 :rules="[notEmptyRules]"
                 label="Name"
                 required
-              />
-            </v-flex>
-            <v-flex>
-              <v-text-field
-                v-model="board.background"
-                :rules="[notEmptyRules]"
-                label="Background"
-                required
-              />
+              ></v-text-field>
             </v-flex>
           </v-layout>
         </v-container>
@@ -59,25 +50,23 @@
 import { mapState } from 'vuex';
 
 export default {
-  name: 'board-create-card',
-  props: ['createMode'],
+  name: 'list-create',
+  props: ['createMode', 'board'],
   data: () => ({
     valid: false,
-    board: {
-      name: '',
-      background: '',
-    },
     notEmptyRules: value => !!value || 'Cannot be empty',
   }),
   computed: {
-    ...mapState('boards', { creating: 'isCreatePending' }),
+    ...mapState('lists', { creating: 'isCreatePending' }),
   },
   methods: {
-    createBoard() {
-      if (this.valid) {
-        const { Board } = this.$FeathersVuex;
-        const board = new Board(this.board);
-        board.save().then(() => {
+    createList() {
+      if (this.validList) {
+        const { List } = this.$FeathersVuex;
+        const list = new List(this.list);
+        // eslint-disable-next-line
+        list.boardId = this.board._id;
+        list.save().then(() => {
           this.$refs.form.reset();
         });
       }

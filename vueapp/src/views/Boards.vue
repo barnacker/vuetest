@@ -17,7 +17,7 @@
               <board-card :board="board"/>
             </v-flex>
             <v-flex xs12 sm6 md4 lg2 xl1>
-              <board-create-card
+              <board-create
                 :createMode="createMode"
                 v-on:activateCreateMode="createMode = true"
               />
@@ -32,14 +32,14 @@
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex';
 import BoardCard from '../components/BoardCard.vue';
-import BoardCreateCard from '../components/BoardCreateCard.vue';
+import BoardCreate from '../components/BoardCreate.vue';
 import WaitBar from '../components/WaitBar.vue';
 
 export default {
   name: 'Boards',
   components: {
     BoardCard,
-    BoardCreateCard,
+    BoardCreate,
     WaitBar,
   },
   data: () => ({
