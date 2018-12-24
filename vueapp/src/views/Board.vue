@@ -25,21 +25,20 @@
           pt-0
           grid-list-md
           fluid
-          @click="createMode = false, cardMode = false"
+          @click="createMode = false, setActiveListCreateCard('')"
         >
           <v-layout align-start justify-start row wrap>
             <v-flex v-for="list in lists" :key="list._id" xs6 md2 xl1>
               <list-card
                 :list="list"
-                :cardMode="cardMode"
-                v-on:activateCardMode="cardMode = true"
+                v-on:deactivateCreateMode="createMode = false"
               />
             </v-flex>
             <v-flex xs6 md2 xl1>
               <list-create
                 :board="board"
                 :createMode="createMode"
-                v-on:activateCreateMode="createMode = true"
+                v-on:activateCreateMode="createMode = true, setActiveListCreateCard('')"
               />
             </v-flex>
           </v-layout>
@@ -95,6 +94,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['setActiveListCreateCard']),
     ...mapActions('lists', { findLists: 'find' }),
     ...mapActions('boards', { getBoard: 'get' }),
     ...mapActions('boards', { patchBoard: 'patch' }),

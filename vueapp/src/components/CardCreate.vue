@@ -1,6 +1,6 @@
 <template>
   <v-card
-    v-if="!localCardMode"
+    v-if="!($store.state.activeListCreateCard === this.list._id)"
     flat
     ripple
     @click.stop="activateCardMode"
@@ -16,20 +16,15 @@
       </v-layout>
     </v-container>
   </v-card>
-  <v-card v-else flat color="grey lighten-2">
+  <v-card v-else flat color="grey lighten-2" @click.stop>
     <v-container pa-0>
       <v-layout row>
         <v-flex xs12 pl-2 pr-2>
-          <v-form
-            ref="form"
-            v-model="valid"
-            @submit.prevent="createCard()"
-            @keydown.prevent.enter
-          >
+          <v-form ref="form" v-model="valid" @submit.prevent="createCard()">
             <v-textarea
               v-model="card.content"
               solo
-              name="content"
+              ref="newCardContent"
               :rules="[notEmptyRules]"
               auto-grow
               message
@@ -45,15 +40,13 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import { log } from 'util';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'card-create',
-  props: ['list', 'cardMode'],
+  props: ['list'],
   data: () => ({
     valid: false,
-    localCardMode: false,
     cardHover: false,
     card: {
       content: '',
@@ -69,9 +62,12 @@ export default {
     ...mapState('cards', { creatingCard: 'isCreatePending' }),
   },
   methods: {
+    ...mapActions(['setActiveListCreateCard']),
     activateCardMode() {
-      this.localCardMode = true;
-      this.$emit('activateCardMode');
+      // eslint-disable-next-line
+      this.setActiveListCreateCard(this.list._id);
+      this.$emit('deactivateCreateMode');
+      this.cardHover = false;
     },
     createCard() {
       if (this.valid) {
@@ -81,6 +77,7 @@ export default {
         card.listId = this.list._id;
         card.save().then(() => {
           this.$refs.form.reset();
+          this.$refs.newCardContent.focus();
         });
       }
     },

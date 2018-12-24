@@ -50,4 +50,18 @@ export default new Vuex.Store({
       userService: 'users',
     }),
   ],
+  state: {
+    activeListCreateCard: '',
+  },
+  mutations: {
+    SET_ACTIVE_LIST_CREATE_CARD(state, listId) {
+      const currentState = state;
+      currentState.activeListCreateCard = listId;
+    },
+  },
+  actions: {
+    setActiveListCreateCard(context, listId) {
+      context.commit('SET_ACTIVE_LIST_CREATE_CARD', listId);
+    },
+  },
 });

@@ -15,15 +15,14 @@
     <v-container pa-0>
       <v-layout column>
         <v-flex v-for="card in cards" :key="card._id" pl-2 pr-2 pb-1>
-          <v-card>
+          <v-card draggable>
             <v-card-title class="caption">{{card.content}}</v-card-title>
           </v-card>
         </v-flex>
         <v-flex>
           <card-create
             :list="list"
-            :cardMode="cardMode"
-            v-on:activateCardMode="$emit('activateCardMode');"
+            v-on:deactivateCreateMode="$emit('deactivateCreateMode')"
           />
         </v-flex>
       </v-layout>
@@ -37,7 +36,7 @@ import CardCreate from './CardCreate.vue';
 
 export default {
   name: 'list-card',
-  props: ['list', 'cardMode'],
+  props: ['list'],
   components: {
     CardCreate,
   },
@@ -69,7 +68,7 @@ export default {
     ...mapActions('cards', { findCards: 'find' }),
     ...mapActions('cards', { removeCard: 'remove' }),
     ...mapActions('lists', { removeList: 'remove' }),
-    removeListTree(id) {
+    removeListTree() {
       this.findCards({
         query: {
         // eslint-disable-next-line
