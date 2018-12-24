@@ -1,5 +1,8 @@
 <template>
-  <v-card>
+  <v-card
+    style="cursor: pointer;"
+    :to="{ name: 'board', params: { id: board._id}}"
+  >
     <v-img class="white--text" height="200px" :src="board.background">
       <v-container fill-height fluid>
         <v-layout fill-height>
@@ -11,11 +14,12 @@
     </v-img>
     <v-card-actions>
       <v-container pa-0>
-        <v-layout justify-space-between row>
+        <v-layout align-center justify-space-between row fill-height>
           <v-flex xs12>
-            <v-btn flat :to="{ name: 'board', params: { id: board._id}}">Edit</v-btn>
+            <v-icon>face</v-icon>
+            <span class="body-1">You sdafsdfadsf</span>
           </v-flex>
-          <v-flex pa-0>
+          <v-flex xs2 pa-0>
             <v-btn fab flat small color="red" @click="removeBoard(board._id)">
               <v-icon>delete_forever</v-icon>
             </v-btn>
