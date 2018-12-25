@@ -14,7 +14,7 @@
               lg2
               xl1
             >
-              <board-card :board="board"/>
+              <board-card :board="board" :currentUser="user"/>
             </v-flex>
             <v-flex xs12 sm6 md4 lg2 xl1>
               <board-create

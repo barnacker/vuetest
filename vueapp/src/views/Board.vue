@@ -5,20 +5,34 @@
     pa-0
     :style="'background-image: url('+board.background+'); background-size:cover;'"
   >
-    <v-layout column>
+    <v-layout v-if="boardsError" fill-height column class="grey darken-3">
+      <v-flex xs12 pa-0>
+        <v-alert :value="true" type="error">{{ boardsError.message }}</v-alert>
+      </v-flex>
       <v-flex xs12>
+        <v-img
+          :src="require('../assets/error.gif')"
+          class="my-3"
+          contain
+          height="100"
+        ></v-img>
+      </v-flex>
+    </v-layout>
+    <v-layout v-if="!boardsError" column>
+      <v-flex xs12 v-if="!boardsError">
         <v-form v-model="valid" @keydown.prevent.enter>
           <v-text-field
             dark
             prepend-icon="dashboard"
             class="headline mb-0"
-            single-line
+            solo-inverted
             v-model="board.name"
             :rules="[notEmptyRules]"
             label="Name"
             required
-            @change="myPatch()"
+            @input="myPatch()"
             :loading="loadingLists || loadingBoard"
+            color="orange"
           >
             <v-progress-linear
               slot="progress"
@@ -96,8 +110,8 @@ export default {
     });
   },
   computed: {
-    ...mapState('boards', { loadingBoard: 'isGetPending' }),
-    ...mapState('lists', { loadingLists: 'isFindPending' }),
+    ...mapState('boards', { loadingBoard: 'isGetPending', boardsError: 'errorOnGet' }),
+    ...mapState('lists', { loadingLists: 'isFindPending', listsError: 'errorOnFind' }),
     ...mapGetters('lists', { findListsInStore: 'find' }),
     lists() {
       return this.findListsInStore({

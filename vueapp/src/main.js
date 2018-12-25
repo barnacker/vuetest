@@ -14,3 +14,4 @@ new Vue({
 }).$mount('#app');
 
 Vue.component('v-gravatar', Gravatar);
+Vue.use(require('vue-moment'));

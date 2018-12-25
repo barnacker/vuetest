@@ -16,8 +16,19 @@
       <v-container pa-0>
         <v-layout align-center justify-space-between row fill-height>
           <v-flex xs12>
-            <v-icon>face</v-icon>
-            <span class="body-1">You sdafsdfadsf</span>
+            <v-progress-circular
+              v-if="loadingUser"
+              :size="20"
+              :width="2"
+              color="primary"
+              indeterminate
+            ></v-progress-circular>
+            <span class="body-1" v-if="!loadingUser">
+              <v-avatar :size="20">
+                <v-gravatar :email="ownerUser.email"/>
+              </v-avatar>
+              {{ owner }} - {{ board.updatedAt | moment("from") }}
+            </span>
           </v-flex>
           <v-flex xs2 pa-0>
             <v-btn fab flat small color="red" @click="removeBoard(board._id)">
@@ -31,13 +42,35 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapState, mapActions } from 'vuex';
+import { setTimeout } from 'timers';
 
 export default {
   name: 'board-card',
-  props: ['board'],
+  props: ['board', 'currentUser'],
+  data: () => ({
+    ownerUser: '',
+  }),
+  computed: {
+    ...mapState('users', { loadingUser: 'isGetPending' }),
+    owner() {
+      if (this.ownerUser === this.currentUser) {
+        return 'You';
+      }
+      return this.ownerUser.displayname;
+    },
+  },
   methods: {
+    ...mapActions('users', { getUser: 'get' }),
     ...mapActions('boards', { removeBoard: 'remove' }),
+    getOwner() {
+      this.getUser(this.board.ownerId).then((user) => {
+        this.ownerUser = user;
+      });
+    },
+  },
+  beforeMount() {
+    this.getOwner();
   },
 };
 </script>
