@@ -128,9 +128,9 @@ export default {
     ...mapActions('cards', { patchCard: 'patch' }),
     myPatch() {
       // eslint-disable-next-line
-        if (this.board._id) {
+      if (this.board._id) {
         // eslint-disable-next-line
-          let id = this.board._id;
+        let id = this.board._id;
         this.patchBoard([id, { name: this.board.name }, {}]);
       }
     },
