@@ -30,7 +30,10 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex';
+import {
+  mapState, mapActions, mapGetters, mapMutations,
+} from 'vuex';
+import { log } from 'util';
 import BoardCard from '../components/BoardCard.vue';
 import BoardCreate from '../components/BoardCreate.vue';
 import WaitBar from '../components/WaitBar.vue';
@@ -48,6 +51,8 @@ export default {
     notEmptyRules: value => !!value || 'Cannot be empty',
   }),
   mounted() {
+    log('Clearing activities..');
+    this.clearActivities();
     this.findBoards({
       query: {
         // eslint-disable-next-line
@@ -72,6 +77,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('activities', { clearActivities: 'clearAll' }),
     ...mapActions('boards', { findBoards: 'find' }),
     ...mapActions('boards', { removeBoard: 'remove' }),
     createBoard() {

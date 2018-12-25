@@ -7,6 +7,10 @@ module.exports = function (app) {
   const { Schema } = mongooseClient;
   const activities = new Schema({
     text: { type: String, required: true },
+    user: {
+      type: Map,
+      of: String
+    },
     boardId: { type: Schema.Types.ObjectId, ref: 'boards' },
   }, {
     timestamps: true

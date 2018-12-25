@@ -30,7 +30,7 @@
             :rules="[notEmptyRules]"
             label="Name"
             required
-            @input="myPatch()"
+            @change="myPatch()"
             :loading="loadingLists || loadingBoard"
             color="orange"
           >
@@ -99,14 +99,7 @@ export default {
     notEmptyRules: value => !!value || 'Cannot be empty',
   }),
   mounted() {
-    this.getBoard(this.$route.params.id).then((response) => {
-      this.board = response.data || response;
-    });
-    this.findLists({
-      query: {
-        boardId: this.$route.params.id,
-      },
-    });
+    this.loadBoard();
   },
   computed: {
     ...mapState('boards', { loadingBoard: 'isGetPending', boardsError: 'errorOnGet' }),
@@ -126,12 +119,40 @@ export default {
     ...mapActions('boards', { getBoard: 'get' }),
     ...mapActions('boards', { patchBoard: 'patch' }),
     ...mapActions('cards', { patchCard: 'patch' }),
+    ...mapActions('activities', { findActivities: 'find' }),
+    loadBoard() {
+      this.getBoard(this.$route.params.id).then((response) => {
+        this.board = response.data || response;
+        this.loadLists();
+      });
+    },
+    loadLists() {
+      this.findLists({
+        query: {
+          boardId: this.$route.params.id,
+        },
+      }).then(() => {
+        this.loadActivities();
+      });
+    },
+    loadActivities() {
+      this.findActivities({
+        query: {
+          boardId: this.$route.params.id,
+          $sort: {
+            updatedAt: -1,
+          },
+        },
+      });
+    },
     myPatch() {
       // eslint-disable-next-line
       if (this.board._id) {
         // eslint-disable-next-line
         let id = this.board._id;
-        this.patchBoard([id, { name: this.board.name }, {}]);
+        this.patchBoard([id, { name: this.board.name }, {}]).then(() => {
+          this.loadActivities();
+        });
       }
     },
     createList() {
@@ -141,6 +162,7 @@ export default {
         list.boardId = this.$route.params.id;
         list.save().then(() => {
           this.$refs.form.reset();
+          this.loadActivities();
         });
       }
     },
@@ -154,6 +176,7 @@ export default {
         this.dragOrigin = '';
         this.dragTarget = '';
         this.draggingCard = null;
+        this.loadActivities();
       });
     },
     dragOverList(event, list) {

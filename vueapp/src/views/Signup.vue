@@ -1,54 +1,56 @@
 <template>
-  <v-container fluid>
+  <v-container fill-height>
     <v-slide-y-transition mode="out-in">
-      <v-layout column align-center>
-        <v-icon x-large>face</v-icon>
-        <v-form v-model="valid" @submit.prevent="signup">
-          <v-text-field
-            v-model="user.username"
-            :rules="[notEmptyRules]"
-            label="User"
-            required
-            :disabled="loading"
-          ></v-text-field>
-          <v-text-field
-            v-model="user.displayname"
-            :rules="[notEmptyRules]"
-            label="Display Name"
-            required
-            :disabled="loading"
-          ></v-text-field>
-          <v-text-field
-            v-model="user.email"
-            :rules="[notEmptyRules,validEmail]"
-            label="email"
-            required
-            :disabled="loading"
-          ></v-text-field>
-          <v-text-field
-            v-model="user.password"
-            :rules="[notEmptyRules]"
-            type="password"
-            label="Password"
-            required
-            :disabled="loading"
-          ></v-text-field>
-          <v-text-field
-            v-model="user.confirm_password"
-            :rules="[notEmptyRules, confirmPasswordRules]"
-            type="password"
-            label="Confirm Password"
-            required
-            :disabled="loading"
-          ></v-text-field>
-          <div class="text-xs-center">
-            <v-btn
-              type="submit"
-              :loading="loading"
-              :disabled="!valid || loading"
-            >Sign up</v-btn>
-          </div>
-        </v-form>
+      <v-layout align-center justify-center>
+        <v-flex xs2 class="text-xs-center">
+          <v-icon x-large>face</v-icon>
+          <v-form v-model="valid" @submit.prevent="signup">
+            <v-text-field
+              v-model="user.username"
+              :rules="[notEmptyRules]"
+              label="User"
+              required
+              :disabled="loading"
+            ></v-text-field>
+            <v-text-field
+              v-model="user.displayname"
+              :rules="[notEmptyRules]"
+              label="Display Name"
+              required
+              :disabled="loading"
+            ></v-text-field>
+            <v-text-field
+              v-model="user.email"
+              :rules="[notEmptyRules,validEmail]"
+              label="Email"
+              required
+              :disabled="loading"
+            ></v-text-field>
+            <v-text-field
+              v-model="user.password"
+              :rules="[notEmptyRules]"
+              type="password"
+              label="Password"
+              required
+              :disabled="loading"
+            ></v-text-field>
+            <v-text-field
+              v-model="user.confirm_password"
+              :rules="[notEmptyRules, confirmPasswordRules]"
+              type="password"
+              label="Confirm Password"
+              required
+              :disabled="loading"
+            ></v-text-field>
+            <div class="text-xs-center">
+              <v-btn
+                type="submit"
+                :loading="loading"
+                :disabled="!valid || loading"
+              >Sign up</v-btn>
+            </div>
+          </v-form>
+        </v-flex>
       </v-layout>
     </v-slide-y-transition>
   </v-container>

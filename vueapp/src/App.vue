@@ -1,30 +1,26 @@
 <template>
   <v-app id="inspire">
     <v-navigation-drawer
+      v-if="activities.length > 0"
       :clipped="$vuetify.breakpoint.lgAndUp"
       v-model="drawer"
       fixed
       app
       right
+      width="300"
     >
       <v-list two-line subheader>
         <v-subheader>Activities</v-subheader>
 
         <v-list-tile v-for="activity in activities" :key="activity._id" avatar>
           <v-list-tile-avatar>
-            <v-icon>face</v-icon>
+            <v-gravatar email="habib.tremblay@gmail.com"/>
           </v-list-tile-avatar>
 
           <v-list-tile-content>
-            <v-list-tile-title>{{ activity.text }}</v-list-tile-title>
-            <v-list-tile-sub-title>{{ activity.text }}</v-list-tile-sub-title>
+            <v-list-tile-title>{{ activity.user.displayname }} {{ activity.text }}</v-list-tile-title>
+            <v-list-tile-sub-title>{{ activity.updatedAt | moment("from") }}</v-list-tile-sub-title>
           </v-list-tile-content>
-
-          <v-list-tile-action>
-            <v-btn icon ripple>
-              <v-icon color="grey lighten-1">info</v-icon>
-            </v-btn>
-          </v-list-tile-action>
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
@@ -42,12 +38,39 @@
         <span class="hidden-sm-and-down">Trello Clone</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn icon>
-        <v-icon>face</v-icon>
-      </v-btn>
-      <v-btn icon @click.stop="drawer = !drawer">
-        <v-icon>notifications</v-icon>
-      </v-btn>
+      <v-tooltip bottom>
+        <v-btn
+          v-if="loadingActivities || activities.length > 0"
+          icon
+          @click.stop="drawer = !drawer"
+          slot="activator"
+        >
+          <v-progress-circular
+            v-if="loadingActivities"
+            indeterminate
+            size="24"
+            color="white"
+          ></v-progress-circular>
+          <v-icon v-else>notifications</v-icon>
+        </v-btn>
+        <span>Activities</span>
+      </v-tooltip>
+      <v-toolbar-items v-if="!connected">
+        <v-btn flat :to="{ name: 'login' }">Login</v-btn>
+        <v-btn flat :to="{ name: 'signup' }">Sign up</v-btn>
+      </v-toolbar-items>
+      <v-menu offset-y v-else>
+        <v-btn icon large slot="activator">
+          <v-avatar :size="32" v-if="connected">
+            <v-gravatar :email="connected.email"/>
+          </v-avatar>
+        </v-btn>
+        <v-list>
+          <v-list-tile @click="disconnect">
+            <v-list-tile-title>Logout</v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
     </v-toolbar>
     <v-content>
       <router-view/>
@@ -59,11 +82,10 @@
 import { mapState, mapActions, mapGetters } from 'vuex';
 import { log } from 'util';
 
-
 export default {
   name: 'App',
   data: () => ({
-    drawer: true,
+    drawer: false,
   }),
   computed: {
     ...mapState('auth', {
@@ -73,18 +95,27 @@ export default {
     ...mapState('activities', { loadingActivities: 'isFindPending' }),
     ...mapGetters('activities', { findActivitiesInStore: 'find' }),
     activities() {
-      return this.findActivitiesInStore({
+      log('Finding activities...');
+      let activities;
+      activities = this.findActivitiesInStore({
         query: {
-          // boardId: this.$route.params.id,
+          $sort: {
+            updatedAt: -1,
+          },
         },
       }).data;
+      log(activities.length > 0);
+      if (!this.boardId) {
+        // activities = false;
+      }
+
+      return activities;
     },
     backArrow() {
       return Object.keys(this.$route.params).length !== 0;
     },
   },
   methods: {
-    ...mapActions('activities', { findActivities: 'find' }),
     ...mapActions('auth', ['logout']),
     disconnect() {
       this.logout()
@@ -103,13 +134,6 @@ export default {
       }
     },
   },
-  mounted() {
-    const a = this.findActivities({
-      query: {
-        //
-      },
-    });
-    log(a);
-  },
+
 };
 </script>

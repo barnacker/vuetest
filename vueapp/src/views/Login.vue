@@ -1,52 +1,52 @@
 <template>
-  <v-container fluid>
+  <v-container fill-height>
     <v-slide-y-transition mode="out-in">
-      <v-layout column align-center>
-        <v-icon x-large>assignment_ind</v-icon>
-        <v-form v-model="valid" @submit.prevent="login" @keydown.enter.prevent>
-          <v-text-field
-            v-model="user.username"
-            :rules="[notEmptyRules]"
-            label="User"
-            required
-            :disabled="authenticating"
-          ></v-text-field>
-          <v-text-field
-            v-model="user.password"
-            :rules="[notEmptyRules]"
-            type="password"
-            label="Password"
-            required
-            :disabled="authenticating"
-          ></v-text-field>
-          <div class="text-xs-center">
+      <v-layout align-center justify-center>
+        <v-flex xs2 class="text-xs-center">
+          <v-icon x-large>assignment_ind</v-icon>
+          <v-form
+            v-model="valid"
+            @submit.prevent="login"
+            @keydown.enter.prevent
+          >
+            <v-text-field
+              v-model="user.username"
+              :rules="[notEmptyRules]"
+              label="User"
+              required
+              :disabled="authenticating"
+            ></v-text-field>
+            <v-text-field
+              v-model="user.password"
+              :rules="[notEmptyRules]"
+              type="password"
+              label="Password"
+              required
+              :disabled="authenticating"
+            ></v-text-field>
             <v-btn
               type="submit"
               :loading="authenticating"
               :disabled="!valid || authenticating"
             >Login</v-btn>
-          </div>
-        </v-form>
-        <v-dialog v-model="dialog" max-width="290">
-          <v-card>
-            <v-card-title class="headline">
-              <v-icon large>error</v-icon>Authentication Error
-            </v-card-title>
-
-            <v-card-text>{{authErr}}</v-card-text>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn
-                color="green darken-1"
-                flat="flat"
-                @click="dialog = false"
-              >OK</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+          </v-form>
+        </v-flex>
       </v-layout>
     </v-slide-y-transition>
+    <v-dialog v-model="dialog" max-width="290">
+      <v-card>
+        <v-card-title class="headline">
+          <v-icon large>error</v-icon>Authentication Error
+        </v-card-title>
+
+        <v-card-text>{{authErr}}</v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" flat="flat" @click="dialog = false">OK</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
