@@ -1,84 +1,98 @@
 <template>
-  <v-app>
-    <v-toolbar dark color="primary" app>
-      <v-toolbar-title class="headline text-uppercase">
-        <v-btn
-          flat
-          icon
-          v-if="backArrow"
-          class="hidden-xs-only"
-          @click="back()"
-        >
+  <v-app id="inspire">
+    <v-navigation-drawer
+      :clipped="$vuetify.breakpoint.lgAndUp"
+      v-model="drawer"
+      fixed
+      app
+      right
+    >
+      <v-list two-line subheader>
+        <v-subheader>Activities</v-subheader>
+
+        <v-list-tile v-for="activity in activities" :key="activity._id" avatar>
+          <v-list-tile-avatar>
+            <v-icon>face</v-icon>
+          </v-list-tile-avatar>
+
+          <v-list-tile-content>
+            <v-list-tile-title>{{ activity.text }}</v-list-tile-title>
+            <v-list-tile-sub-title>{{ activity.text }}</v-list-tile-sub-title>
+          </v-list-tile-content>
+
+          <v-list-tile-action>
+            <v-btn icon ripple>
+              <v-icon color="grey lighten-1">info</v-icon>
+            </v-btn>
+          </v-list-tile-action>
+        </v-list-tile>
+      </v-list>
+    </v-navigation-drawer>
+    <v-toolbar
+      :clipped-right="$vuetify.breakpoint.lgAndUp"
+      color="blue darken-3"
+      dark
+      app
+      fixed
+    >
+      <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
+        <v-toolbar-side-icon v-if="backArrow" @click="back()">
           <v-icon>arrow_back</v-icon>
-        </v-btn>
-        <span>VueApp</span>
+        </v-toolbar-side-icon>
+        <span class="hidden-sm-and-down">Trello Clone</span>
       </v-toolbar-title>
+      <v-text-field
+        flat
+        solo-inverted
+        hide-details
+        prepend-inner-icon="search"
+        label="Search"
+        class="hidden-sm-and-down"
+      ></v-text-field>
       <v-spacer></v-spacer>
-      <v-toolbar-items v-if="!connected">
-        <v-btn flat :to="{ name: 'login' }">Login</v-btn>
-        <v-btn flat :to="{ name: 'signup' }">Sign up</v-btn>
-      </v-toolbar-items>
-      <v-avatar :size="36" v-if="connected">
-        <v-gravatar :email="connected.email"/>
-      </v-avatar>
-      <v-menu offset-y v-if="connected">
-        <v-btn flat slot="activator">
-          &nbsp;{{connected.displayname}}
-          <v-icon right>arrow_drop_down</v-icon>
-        </v-btn>
-        <v-list>
-          <v-list-tile @click="disconnect">
-            <v-list-tile-title>Logout</v-list-tile-title>
-          </v-list-tile>
-        </v-list>
-      </v-menu>
+      <v-btn icon>
+        <v-icon>face</v-icon>
+      </v-btn>
+      <v-btn icon @click.stop="drawer = !drawer">
+        <v-icon>notifications</v-icon>
+      </v-btn>
     </v-toolbar>
     <v-content>
-      <transition name="fade">
-        <router-view/>
-      </transition>
+      <router-view/>
     </v-content>
-    <v-footer>
-      <span>Tayol</span>
-    </v-footer>
   </v-app>
 </template>
 
-<style>
-.fade-enter-active,
-.fade-leave-active {
-  transition-property: opacity;
-  transition-duration: 0.25s;
-}
-
-.fade-enter-active {
-  transition-delay: 0.25s;
-}
-
-.fade-enter,
-.fade-leave-active {
-  opacity: 0;
-}
-</style>
-
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapGetters } from 'vuex';
+import { log } from 'util';
+
 
 export default {
   name: 'App',
   data: () => ({
-    //
+    drawer: false,
   }),
   computed: {
     ...mapState('auth', {
       disconnecting: 'isLogoutPending',
       connected: 'user',
     }),
+    ...mapState('activities', { loadingActivities: 'isFindPending' }),
+    ...mapGetters('activities', { findActivitiesInStore: 'find' }),
+    activities() {
+      return this.findActivitiesInStore({
+        query: {
+          // boardId: this.$route.params.id,
+        },
+      }).data;
+    },
     backArrow() {
       return Object.keys(this.$route.params).length !== 0;
     },
   },
   methods: {
+    ...mapActions('activities', { findActivities: 'find' }),
     ...mapActions('auth', ['logout']),
     disconnect() {
       this.logout()
@@ -96,6 +110,14 @@ export default {
         this.$router.replace('/boards');
       }
     },
+  },
+  mounted() {
+    const a = this.findActivities({
+      query: {
+        //
+      },
+    });
+    log(a);
   },
 };
 </script>

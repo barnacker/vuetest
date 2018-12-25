@@ -1,8 +1,5 @@
 <template>
-  <v-card
-    style="cursor: pointer;"
-    :to="{ name: 'board', params: { id: board._id}}"
-  >
+  <v-card style="cursor: pointer;" @click="open">
     <v-img class="white--text" height="200px" :src="board.background">
       <v-container fill-height fluid>
         <v-layout fill-height>
@@ -31,7 +28,13 @@
             </span>
           </v-flex>
           <v-flex xs2 pa-0>
-            <v-btn fab flat small color="red" @click="removeBoard(board._id)">
+            <v-btn
+              fab
+              flat
+              small
+              color="red"
+              @click.stop="removeBoard(board._id)"
+            >
               <v-icon>delete_forever</v-icon>
             </v-btn>
           </v-flex>
@@ -43,7 +46,6 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import { setTimeout } from 'timers';
 
 export default {
   name: 'board-card',
@@ -63,6 +65,10 @@ export default {
   methods: {
     ...mapActions('users', { getUser: 'get' }),
     ...mapActions('boards', { removeBoard: 'remove' }),
+    open() {
+      // eslint-disable-next-line
+      this.$router.push({ name: 'board', params: { id: this.board._id } });
+    },
     getOwner() {
       this.getUser(this.board.ownerId).then((user) => {
         this.ownerUser = user;

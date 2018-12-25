@@ -77,7 +77,6 @@
 
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex';
-import { log } from 'util';
 import ListCard from '../components/ListCard.vue';
 import ListCreate from '../components/ListCreate.vue';
 

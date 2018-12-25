@@ -45,6 +45,12 @@ export default new Vuex.Store({
         done: false,
       },
     }),
+    service('activities', {
+      instanceDefaults: {
+        text: '',
+        boardId: '',
+      },
+    }),
     // Setup the auth plugin.
     auth({
       userService: 'users',

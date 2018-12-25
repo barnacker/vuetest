@@ -1,9 +1,10 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
 const hooks = require('feathers-authentication-hooks');
+const { postBoardActivity } = require('../../hooks/activities');
 
 module.exports = {
   before: {
-    all: [ authenticate('jwt') ],
+    all: [authenticate('jwt')],
     find: [
       hooks.restrictToOwner({ idField: '_id', ownerField: 'ownerId' })
     ],
@@ -28,10 +29,10 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [],
-    update: [],
-    patch: [],
-    remove: []
+    create: [postBoardActivity],
+    update: [postBoardActivity],
+    patch: [postBoardActivity],
+    remove: [postBoardActivity]
   },
 
   error: {
