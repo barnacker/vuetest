@@ -51,7 +51,6 @@
 </template>
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex';
-import { log } from 'util';
 import CardCreate from './CardCreate.vue';
 
 export default {
@@ -92,7 +91,6 @@ export default {
   },
   methods: {
     ...mapActions('cards', { findCards: 'find' }),
-    ...mapActions('cards', { removeCard: 'remove' }),
   },
 };
 </script>

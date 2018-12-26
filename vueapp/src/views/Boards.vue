@@ -33,7 +33,6 @@
 import {
   mapState, mapActions, mapGetters, mapMutations,
 } from 'vuex';
-import { log } from 'util';
 import _ from 'lodash';
 import BoardCard from '../components/BoardCard.vue';
 import BoardCreate from '../components/BoardCreate.vue';
@@ -62,7 +61,6 @@ export default {
   watch: {
     // eslint-disable-next-line
     boards: _.debounce(function () {
-      log('board changed.');
       this.clearActivities();
     }, 100),
   },

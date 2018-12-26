@@ -60,7 +60,7 @@
                 v-on:dropDraggedCard="dropDraggedCard"
                 v-on:dragOverList="dragOverList"
                 v-on:removeList="removeListTree(list._id)"
-                v-on:refreshActivities="loadActivities"
+                v-on:refreshActivities="debouncedLoadActivities()"
               />
             </v-flex>
             <v-flex xs6 md2 xl1>
@@ -68,7 +68,7 @@
                 :board="board"
                 :createMode="createMode"
                 v-on:activateCreateMode="createMode = true, setActiveListCreateCard('')"
-                v-on:refreshActivities="loadActivities"
+                v-on:refreshActivities="debouncedLoadActivities()"
               />
             </v-flex>
           </v-layout>
@@ -107,15 +107,15 @@ export default {
   },
   watch: {
     // eslint-disable-next-line
-    board: _.debounce(function () {
+    board() {
       log('the board changed.');
-      this.loadActivities();
-    }, 100),
+      this.debouncedLoadActivities();
+    },
     // eslint-disable-next-line
-    lists: _.debounce(function () {
+    lists() {
       log('lists changed.');
-      this.loadActivities();
-    }, 100),
+      this.debouncedLoadActivities();
+    },
   },
   computed: {
     ...mapState('boards', { loadingBoard: 'isGetPending', boardsError: 'errorOnGet' }),
@@ -138,6 +138,7 @@ export default {
     ...mapActions('boards', { patchBoard: 'patch' }),
     ...mapActions('cards', { findCards: 'find' }),
     ...mapActions('cards', { patchCard: 'patch' }),
+    ...mapActions('cards', { removeCard: 'remove' }),
     ...mapActions('activities', { findActivities: 'find' }),
     loadBoard() {
       this.getBoard(this.$route.params.id).then((response) => {
@@ -150,8 +151,6 @@ export default {
         query: {
           boardId: this.$route.params.id,
         },
-      }).then(() => {
-        this.loadActivities();
       });
     },
     loadActivities() {
@@ -165,13 +164,17 @@ export default {
         },
       });
     },
+    // eslint-disable-next-line
+    debouncedLoadActivities: _.debounce(function () {
+      this.loadActivities();
+    }, 100),
     myPatch() {
       // eslint-disable-next-line
       if (this.board._id) {
         // eslint-disable-next-line
         let id = this.board._id;
         this.patchBoard([id, { name: this.board.name }, {}]).then(() => {
-          this.loadActivities();
+          this.debouncedLoadActivities();
         });
       }
     },
@@ -183,7 +186,7 @@ export default {
         this.addBlindActivities();
         list.save().then(() => {
           this.$refs.form.reset();
-          this.loadActivities();
+          // this.loadActivities();
         });
       }
     },
@@ -197,7 +200,7 @@ export default {
         this.dragOrigin = '';
         this.dragTarget = '';
         this.draggingCard = null;
-        this.loadActivities();
+        // this.loadActivities();
       });
     },
     dragOverList(event, list) {
@@ -221,7 +224,7 @@ export default {
       });
       // eslint-disable-next-line
       await this.removeList(listId);
-      await this.loadActivities();
+      // await this.loadActivities();
     },
   },
 };
