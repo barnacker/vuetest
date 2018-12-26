@@ -4,11 +4,11 @@
     flat
     ripple
     @click.stop="$emit('activateCreateMode')"
-    :style="'text-decoration: ' + (cardHover ? 'underline' : 'none') +'; cursor: pointer;'"
+    :style="'opacity: ' + (cardHover ? '1' : '0.7') +'; cursor: pointer; color: white;'"
     pa-0
     @mouseenter="cardHover = true"
     @mouseleave="cardHover = false"
-    :color="cardHover ? 'grey lighten-5' : 'grey lighten-1'"
+    color="grey darken-2"
   >
     <v-container pa-1>
       <v-layout column>

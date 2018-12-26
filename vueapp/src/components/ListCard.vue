@@ -1,25 +1,78 @@
 <template>
   <v-card
+    :style="'color: ' + fgcolor.hex8 + ';'"
     :color="(dragOrigin !== dragTarget && dragTarget===list._id )
       ? 'green lighten-2'
-      : 'grey lighten-2' "
+      : bgcolor.hex8 "
     @dragover="$emit('dragOverList',$event, list)"
   >
     <v-container pa-1>
       <v-layout justify-space-between row>
-        <v-flex xs12 pl-3 pt-3>
+        <v-flex xs12 pl-2 pt-1>
           <h4 class="ma-0">{{list.name}}</h4>
         </v-flex>
-        <v-flex pa-0>
-          <v-btn
-            fab
-            flat
-            small
-            color="red"
-            @click="$emit('removeList',list._id)"
+        <v-flex pa-1>
+          <v-menu
+            v-model="menu"
+            :close-on-content-click="false"
+            :nudge-width="200"
+            offset-x
           >
-            <v-icon>delete_forever</v-icon>
-          </v-btn>
+            <v-icon small slot="activator">ballot</v-icon>
+            <v-card>
+              <v-list>
+                <v-list-tile avatar>
+                  <v-list-tile-avatar>
+                    <v-avatar>
+                      <v-gravatar email="habib.tremblay@gmail.com"/>
+                    </v-avatar>
+                  </v-list-tile-avatar>
+
+                  <v-list-tile-content>
+                    <v-list-tile-title>Owner</v-list-tile-title>
+                    <v-list-tile-sub-title>{{ list.updatedAt | moment("from") }}</v-list-tile-sub-title>
+                  </v-list-tile-content>
+                </v-list-tile>
+                <v-list-tile>
+                  <v-list-tile-content>
+                    <v-list-tile-title>Background Color</v-list-tile-title>
+                  </v-list-tile-content>
+                  <v-list-tile-action>
+                    <v-menu :close-on-content-click="false" offset-x offset-y>
+                      <v-btn icon slot="activator">
+                        <v-icon>format_color_fill</v-icon>
+                      </v-btn>
+                      <sketch-picker v-model="bgcolor"/>
+                    </v-menu>
+                  </v-list-tile-action>
+                </v-list-tile>
+                <v-list-tile>
+                  <v-list-tile-content>
+                    <v-list-tile-title>Text Color</v-list-tile-title>
+                  </v-list-tile-content>
+                  <v-list-tile-action>
+                    <v-menu :close-on-content-click="false" offset-x offset-y>
+                      <v-btn icon slot="activator">
+                        <v-icon>format_color_text</v-icon>
+                      </v-btn>
+                      <sketch-picker v-model="fgcolor"/>
+                    </v-menu>
+                  </v-list-tile-action>
+                </v-list-tile>
+              </v-list>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+
+                <v-btn
+                  flat
+                  color="error"
+                  @click="menu = false, $emit('removeList',list._id)"
+                >
+                  <v-icon dark right>remove_circle</v-icon>Delete Card
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-menu>
         </v-flex>
       </v-layout>
     </v-container>
@@ -51,6 +104,7 @@
 </template>
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex';
+import { Sketch } from 'vue-color';
 import CardCreate from './CardCreate.vue';
 
 export default {
@@ -58,9 +112,12 @@ export default {
   props: ['list', 'dragOrigin', 'dragTarget'],
   components: {
     CardCreate,
+    'sketch-picker': Sketch,
   },
   data: () => ({
     //
+    bgcolor: { hex8: '#E0E0E0FF' },
+    fgcolor: { hex8: '#000000FF' },
   }),
   mounted() {
     this.findCards({

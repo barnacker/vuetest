@@ -4,10 +4,13 @@
     flat
     ripple
     @click.stop="$emit('activateCreateMode'), cardHover = false"
-    :style="'text-decoration: ' + (cardHover ? 'underline' : 'none') +'; cursor: pointer;'"
+    :style="
+      'text-decoration: ' + (cardHover ? 'underline' : 'none') + ';'
+      + 'cursor: pointer;'
+      + 'color: ' + (cardHover ? 'black' : 'grey') + ';'"
     @mouseenter="cardHover = true"
     @mouseleave="cardHover = false"
-    :color="cardHover ? 'grey lighten-2' : 'grey lighten-1'"
+    :color="cardHover ? 'grey lighten-1' : 'grey lighten-2'"
   >
     <v-container pa-1>
       <v-layout column>

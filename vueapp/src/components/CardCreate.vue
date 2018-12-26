@@ -11,8 +11,8 @@
   >
     <v-container pa-0>
       <v-layout>
-        <v-flex xs12 pl-2 pt-0>
-          <span class="caption ma-0">Add a card...</span>
+        <v-flex xs12 pl-2 pt-0 pb-0>
+          <span class="caption">Add a card...</span>
         </v-flex>
       </v-layout>
     </v-container>
