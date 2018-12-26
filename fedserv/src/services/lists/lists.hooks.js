@@ -1,5 +1,6 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
 const { isBoardOwner } = require('../../hooks/authorization');
+const { postListActivity } = require('../../hooks/activities');
 
 module.exports = {
   before: {
@@ -16,10 +17,10 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [],
-    update: [],
-    patch: [],
-    remove: []
+    create: [postListActivity],
+    update: [postListActivity],
+    patch: [postListActivity],
+    remove: [postListActivity]
   },
 
   error: {

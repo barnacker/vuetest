@@ -34,6 +34,7 @@ import {
   mapState, mapActions, mapGetters, mapMutations,
 } from 'vuex';
 import { log } from 'util';
+import _ from 'lodash';
 import BoardCard from '../components/BoardCard.vue';
 import BoardCreate from '../components/BoardCreate.vue';
 import WaitBar from '../components/WaitBar.vue';
@@ -51,14 +52,19 @@ export default {
     notEmptyRules: value => !!value || 'Cannot be empty',
   }),
   mounted() {
-    log('Clearing activities..');
-    this.clearActivities();
     this.findBoards({
       query: {
         // eslint-disable-next-line
         ownerId: this.user._id,
       },
     });
+  },
+  watch: {
+    // eslint-disable-next-line
+    boards: _.debounce(function () {
+      log('board changed.');
+      this.clearActivities();
+    }, 100),
   },
   computed: {
     ...mapState('auth', { user: 'user' }),

@@ -59,6 +59,8 @@
                 v-on:startDraggingCard="startDraggingCard"
                 v-on:dropDraggedCard="dropDraggedCard"
                 v-on:dragOverList="dragOverList"
+                v-on:removeList="removeListTree(list._id)"
+                v-on:refreshActivities="loadActivities"
               />
             </v-flex>
             <v-flex xs6 md2 xl1>
@@ -66,6 +68,7 @@
                 :board="board"
                 :createMode="createMode"
                 v-on:activateCreateMode="createMode = true, setActiveListCreateCard('')"
+                v-on:refreshActivities="loadActivities"
               />
             </v-flex>
           </v-layout>
@@ -77,6 +80,7 @@
 
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex';
+import { log } from 'util';
 import ListCard from '../components/ListCard.vue';
 import ListCreate from '../components/ListCreate.vue';
 
@@ -101,10 +105,23 @@ export default {
   mounted() {
     this.loadBoard();
   },
+  watch: {
+    // eslint-disable-next-line
+    board: _.debounce(function () {
+      log('the board changed.');
+      this.loadActivities();
+    }, 100),
+    // eslint-disable-next-line
+    lists: _.debounce(function () {
+      log('lists changed.');
+      this.loadActivities();
+    }, 100),
+  },
   computed: {
     ...mapState('boards', { loadingBoard: 'isGetPending', boardsError: 'errorOnGet' }),
     ...mapState('lists', { loadingLists: 'isFindPending', listsError: 'errorOnFind' }),
     ...mapGetters('lists', { findListsInStore: 'find' }),
+    ...mapState('activities', { creatingActivities: 'isCreatePending' }),
     lists() {
       return this.findListsInStore({
         query: {
@@ -114,10 +131,12 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['setActiveListCreateCard']),
+    ...mapActions(['setActiveListCreateCard', 'addBlindActivities']),
     ...mapActions('lists', { findLists: 'find' }),
+    ...mapActions('lists', { removeList: 'remove' }),
     ...mapActions('boards', { getBoard: 'get' }),
     ...mapActions('boards', { patchBoard: 'patch' }),
+    ...mapActions('cards', { findCards: 'find' }),
     ...mapActions('cards', { patchCard: 'patch' }),
     ...mapActions('activities', { findActivities: 'find' }),
     loadBoard() {
@@ -136,6 +155,7 @@ export default {
       });
     },
     loadActivities() {
+      log('loadActivities');
       this.findActivities({
         query: {
           boardId: this.$route.params.id,
@@ -160,6 +180,7 @@ export default {
         const { List } = this.$FeathersVuex;
         const list = new List(this.list);
         list.boardId = this.$route.params.id;
+        this.addBlindActivities();
         list.save().then(() => {
           this.$refs.form.reset();
           this.loadActivities();
@@ -185,6 +206,22 @@ export default {
       if (this.dragTarget !== this.dragOrigin) {
         event.preventDefault();
       }
+    },
+    async removeListTree(listId) {
+      await this.findCards({
+        query: {
+        // eslint-disable-next-line
+        listId: listId,
+        },
+      }).then((cards) => {
+        Object.entries(cards.data).forEach((card) => {
+          // eslint-disable-next-line
+          this.removeCard(card[1]._id);
+        });
+      });
+      // eslint-disable-next-line
+      await this.removeList(listId);
+      await this.loadActivities();
     },
   },
 };

@@ -6,7 +6,9 @@ module.exports = function (app) {
   const mongooseClient = app.get('mongooseClient');
   const { Schema } = mongooseClient;
   const activities = new Schema({
-    text: { type: String, required: true },
+    action: { type: String, required: true },
+    entityType: { type: String, required: true },
+    entityName: { type: String, required: true },
     user: {
       type: Map,
       of: String

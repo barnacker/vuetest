@@ -1,6 +1,8 @@
 <template>
   <v-card
-    :color="(dragOrigin !== dragTarget && dragTarget===list._id ) ? 'green lighten-2': 'grey lighten-2' "
+    :color="(dragOrigin !== dragTarget && dragTarget===list._id )
+      ? 'green lighten-2'
+      : 'grey lighten-2' "
     @dragover="$emit('dragOverList',$event, list)"
   >
     <v-container pa-1>
@@ -9,7 +11,13 @@
           <h4 class="ma-0">{{list.name}}</h4>
         </v-flex>
         <v-flex pa-0>
-          <v-btn fab flat small color="red" @click="removeListTree(list._id)">
+          <v-btn
+            fab
+            flat
+            small
+            color="red"
+            @click="$emit('removeList',list._id)"
+          >
             <v-icon>delete_forever</v-icon>
           </v-btn>
         </v-flex>
@@ -63,6 +71,12 @@ export default {
       },
     });
   },
+  watch: {
+    // eslint-disable-next-line
+    cards() {
+      this.$emit('refreshActivities');
+    },
+  },
   computed: {
     ...mapState('cards', { loadingCard: 'isFindPending' }),
     ...mapGetters('cards', { findCardsInStore: 'find' }),
@@ -79,24 +93,6 @@ export default {
   methods: {
     ...mapActions('cards', { findCards: 'find' }),
     ...mapActions('cards', { removeCard: 'remove' }),
-    ...mapActions('lists', { removeList: 'remove' }),
-    removeListTree() {
-      this.findCards({
-        query: {
-        // eslint-disable-next-line
-        listId: this.list._id,
-        },
-      }).then((cards) => {
-        Object.entries(cards.data).forEach((card) => {
-          // eslint-disable-next-line
-          log(card[1]._id);
-          // eslint-disable-next-line
-          this.removeCard(card[1]._id);
-        });
-        // eslint-disable-next-line
-        this.removeList(this.list._id,);
-      });
-    },
   },
 };
 </script>

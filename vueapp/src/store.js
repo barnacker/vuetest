@@ -50,6 +50,7 @@ export default new Vuex.Store({
         text: '',
         boardId: '',
       },
+      debug: true,
     }),
     // Setup the auth plugin.
     auth({
@@ -58,16 +59,31 @@ export default new Vuex.Store({
   ],
   state: {
     activeListCreateCard: '',
+    blindActivities: 0,
   },
   mutations: {
     SET_ACTIVE_LIST_CREATE_CARD(state, listId) {
       const currentState = state;
       currentState.activeListCreateCard = listId;
     },
+    ADD_BLIND_ACTIVITIES(state) {
+      const currentState = state;
+      currentState.blindActivities += 1;
+    },
+    RESET_BLIND_ACTIVITIES(state) {
+      const currentState = state;
+      currentState.blindActivities = 0;
+    },
   },
   actions: {
     setActiveListCreateCard(context, listId) {
       context.commit('SET_ACTIVE_LIST_CREATE_CARD', listId);
+    },
+    addBlindActivities(context) {
+      context.commit('ADD_BLIND_ACTIVITIES');
+    },
+    resetBlindActivities(context) {
+      context.commit('RESET_BLIND_ACTIVITIES');
     },
   },
 });

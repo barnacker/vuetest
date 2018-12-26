@@ -22,17 +22,18 @@
       <v-layout row>
         <v-flex xs12 pl-2 pr-2>
           <v-form ref="form" v-model="valid" @submit.prevent="createCard()">
-            <v-textarea
-              v-model="card.content"
-              solo
+            <v-text-field
+              class="caption"
               ref="newCardContent"
+              v-model="card.content"
               :rules="[notEmptyRules]"
-              auto-grow
-              message
+              required
               autofocus
-              clearable
-            ></v-textarea>
-            <v-btn small color="Primary" :disabled="!valid" type="submit">Add</v-btn>
+              solo
+              color="secondary"
+              append-icon="save"
+              @click:append="createCard()"
+            />
           </v-form>
         </v-flex>
       </v-layout>
@@ -54,11 +55,6 @@ export default {
     },
     notEmptyRules: value => !!value || 'Cannot be empty',
   }),
-  watch: {
-    cardMode(newVal) { // watch it
-      if (!newVal) { this.localCardMode = false; }
-    },
-  },
   computed: {
     ...mapState('cards', { creatingCard: 'isCreatePending' }),
   },

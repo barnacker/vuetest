@@ -75,6 +75,7 @@ export default {
         list.boardId = this.board._id;
         list.save().then(() => {
           this.$refs.form.reset();
+          this.$emit('refreshActivities');
         });
       }
     },

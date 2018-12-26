@@ -1,8 +1,10 @@
 <template>
   <v-app id="inspire">
     <v-navigation-drawer
+      ref="nav"
       v-if="activities.length > 0"
-      :clipped="$vuetify.breakpoint.lgAndUp"
+      :clipped="$vuetify.breakpoint.smAndUp"
+      mobile-break-point="800"
       v-model="drawer"
       fixed
       app
@@ -13,14 +15,27 @@
         <v-subheader>Activities</v-subheader>
 
         <v-list-tile v-for="activity in activities" :key="activity._id" avatar>
+          <v-list-tile-action>
+            <v-icon v-if="activity.action == 'created'" large>note_add</v-icon>
+            <v-icon v-else-if="activity.action == 'modified'" large>create</v-icon>
+            <v-icon v-else-if="activity.action == 'moved'" large>swap_horiz</v-icon>
+            <v-icon v-else-if="activity.action == 'reordered'" large>swap_vert</v-icon>
+            <v-icon v-else-if="activity.action == 'removed'" large>delete_sweep</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>
+              {{activity.entityType}}
+              {{activity.entityName}}
+              {{ activity.action }}
+            </v-list-tile-title>
+            <v-list-tile-sub-title>
+              {{activity.user.displayname}}
+              {{ activity.updatedAt | moment("from") }}
+            </v-list-tile-sub-title>
+          </v-list-tile-content>
           <v-list-tile-avatar>
             <v-gravatar email="habib.tremblay@gmail.com"/>
           </v-list-tile-avatar>
-
-          <v-list-tile-content>
-            <v-list-tile-title>{{ activity.user.displayname }} {{ activity.text }}</v-list-tile-title>
-            <v-list-tile-sub-title>{{ activity.updatedAt | moment("from") }}</v-list-tile-sub-title>
-          </v-list-tile-content>
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
@@ -51,7 +66,10 @@
             size="24"
             color="white"
           ></v-progress-circular>
-          <v-icon v-else>notifications</v-icon>
+          <v-badge v-else left overlap color="red" v-model="blindActivities">
+            <span slot="badge">{{blindActivities}}</span>
+            <v-icon>notifications</v-icon>
+          </v-badge>
         </v-btn>
         <span>Activities</span>
       </v-tooltip>
@@ -87,27 +105,36 @@ export default {
   data: () => ({
     drawer: false,
   }),
+  watch: {
+    creatingActivity(newVal) { // watch it
+      log('creatingActivity:', newVal);
+    },
+  },
   computed: {
+    ...mapState(['blindActivities']),
     ...mapState('auth', {
       disconnecting: 'isLogoutPending',
       connected: 'user',
     }),
-    ...mapState('activities', { loadingActivities: 'isFindPending' }),
+    ...mapState('activities', {
+      loadingActivities: 'isFindPending',
+      creatingActivity: 'isCreatePending',
+    }),
     ...mapGetters('activities', { findActivitiesInStore: 'find' }),
+    navActive() {
+      if (this.$refs.nav) {
+        return this.$refs.nav.isActive;
+      }
+      return false;
+    },
     activities() {
-      log('Finding activities...');
-      let activities;
-      activities = this.findActivitiesInStore({
+      const activities = this.findActivitiesInStore({
         query: {
           $sort: {
             updatedAt: -1,
           },
         },
       }).data;
-      log(activities.length > 0);
-      if (!this.boardId) {
-        // activities = false;
-      }
 
       return activities;
     },
