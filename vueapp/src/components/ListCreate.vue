@@ -30,10 +30,12 @@
           <v-layout column>
             <v-flex>
               <v-text-field
+                ref="listname"
                 v-model="list.name"
                 :rules="[notEmptyRules]"
                 label="Name"
                 required
+                autofocus
               ></v-text-field>
             </v-flex>
           </v-layout>
@@ -53,6 +55,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import { log } from 'util';
 
 export default {
   name: 'list-create',
@@ -75,7 +78,6 @@ export default {
         list.boardId = this.board._id;
         list.save().then(() => {
           this.$refs.form.reset();
-          this.$emit('refreshActivities');
         });
       }
     },

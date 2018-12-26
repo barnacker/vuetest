@@ -4,8 +4,8 @@
     flat
     ripple
     @click.stop="activateCardMode"
-    :color="cardHover ? 'grey lighten-4' : 'grey lighten-2'"
-    :style="'text-decoration: ' + (cardHover ? 'underline' : 'none') +'; cursor: pointer;'"
+    :color="cardHover ? 'grey lighten-1' : 'grey lighten-2'"
+    :style="'text-decoration: ' + (cardHover ? 'underline' : 'none') +'; cursor: pointer; color: ' + (cardHover ? 'black' : 'grey') +';'"
     @mouseenter="cardHover = true"
     @mouseleave="cardHover = false"
   >
@@ -72,6 +72,7 @@ export default {
         const card = new Card(this.card);
         // eslint-disable-next-line
         card.listId = this.list._id;
+        card.boardId = this.list.boardId; // for server hooks
         card.save().then(() => {
           this.$refs.form.reset();
           this.$refs.newCardContent.focus();

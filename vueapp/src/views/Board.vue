@@ -20,7 +20,7 @@
     </v-layout>
     <v-layout v-if="!boardsError" column>
       <v-flex xs12 v-if="!boardsError">
-        <v-form v-model="valid" @keydown.prevent.enter>
+        <v-form v-model="valid" @submit.prevent @keydown.prevent.enter>
           <v-text-field
             dark
             prepend-icon="dashboard"
@@ -59,7 +59,7 @@
                 v-on:startDraggingCard="startDraggingCard"
                 v-on:dropDraggedCard="dropDraggedCard"
                 v-on:dragOverList="dragOverList"
-                v-on:removeList="removeListTree(list._id)"
+                v-on:removeList="removeListTree(list)"
                 v-on:refreshActivities="debouncedLoadActivities()"
               />
             </v-flex>
@@ -68,7 +68,6 @@
                 :board="board"
                 :createMode="createMode"
                 v-on:activateCreateMode="createMode = true, setActiveListCreateCard('')"
-                v-on:refreshActivities="debouncedLoadActivities()"
               />
             </v-flex>
           </v-layout>
@@ -108,12 +107,10 @@ export default {
   watch: {
     // eslint-disable-next-line
     board() {
-      log('the board changed.');
       this.debouncedLoadActivities();
     },
     // eslint-disable-next-line
     lists() {
-      log('lists changed.');
       this.debouncedLoadActivities();
     },
   },
@@ -121,8 +118,10 @@ export default {
     ...mapState('boards', { loadingBoard: 'isGetPending', boardsError: 'errorOnGet' }),
     ...mapState('lists', { loadingLists: 'isFindPending', listsError: 'errorOnFind' }),
     ...mapGetters('lists', { findListsInStore: 'find' }),
+    ...mapGetters('lists', { getListInStore: 'get' }),
     ...mapState('activities', { creatingActivities: 'isCreatePending' }),
     lists() {
+      log('compute lists');
       return this.findListsInStore({
         query: {
           boardId: this.$route.params.id,
@@ -133,12 +132,8 @@ export default {
   methods: {
     ...mapActions(['setActiveListCreateCard', 'addBlindActivities']),
     ...mapActions('lists', { findLists: 'find' }),
-    ...mapActions('lists', { removeList: 'remove' }),
     ...mapActions('boards', { getBoard: 'get' }),
-    ...mapActions('boards', { patchBoard: 'patch' }),
     ...mapActions('cards', { findCards: 'find' }),
-    ...mapActions('cards', { patchCard: 'patch' }),
-    ...mapActions('cards', { removeCard: 'remove' }),
     ...mapActions('activities', { findActivities: 'find' }),
     loadBoard() {
       this.getBoard(this.$route.params.id).then((response) => {
@@ -171,9 +166,7 @@ export default {
     myPatch() {
       // eslint-disable-next-line
       if (this.board._id) {
-        // eslint-disable-next-line
-        let id = this.board._id;
-        this.patchBoard([id, { name: this.board.name }, {}]).then(() => {
+        this.board.patch().then(() => {
           this.debouncedLoadActivities();
         });
       }
@@ -194,13 +187,16 @@ export default {
       this.dragOrigin = card.listId;
       this.draggingCard = card;
     },
-    dropDraggedCard(card) {
+    dropDraggedCard(draggedCard) {
+      const card = draggedCard;
+      card.listId = this.dragTarget;
       // eslint-disable-next-line
-      this.patchCard([card._id, { listId: this.dragTarget }, {}]).then(() => {
+      card.boardId = this.board._id; // for server hooks
+      card.move = true; // for server hooks
+      card.save().then(() => {
         this.dragOrigin = '';
         this.dragTarget = '';
         this.draggingCard = null;
-        // this.loadActivities();
       });
     },
     dragOverList(event, list) {
@@ -210,21 +206,20 @@ export default {
         event.preventDefault();
       }
     },
-    async removeListTree(listId) {
+    async removeListTree(list) {
+      // eslint-disable-next-line
+      const listId = list._id;
+      await list.remove();
       await this.findCards({
         query: {
-        // eslint-disable-next-line
-        listId: listId,
+          listId,
         },
       }).then((cards) => {
         Object.entries(cards.data).forEach((card) => {
           // eslint-disable-next-line
-          this.removeCard(card[1]._id);
+          card[1].remove();
         });
       });
-      // eslint-disable-next-line
-      await this.removeList(listId);
-      // await this.loadActivities();
     },
   },
 };

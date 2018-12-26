@@ -4,7 +4,6 @@
       ref="nav"
       v-if="activities.length > 0"
       :clipped="$vuetify.breakpoint.smAndUp"
-      mobile-break-point="800"
       v-model="drawer"
       fixed
       app
@@ -24,9 +23,9 @@
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>
+              {{ activity.action | capitalize }}
               {{activity.entityType}}
               {{activity.entityName}}
-              {{ activity.action }}
             </v-list-tile-title>
             <v-list-tile-sub-title>
               {{activity.user.displayname}}
@@ -161,6 +160,13 @@ export default {
       }
     },
   },
-
+  filters: {
+    capitalize(value) {
+      if (!value) return '';
+      let text = value;
+      text = text.toString();
+      return text.charAt(0).toUpperCase() + text.slice(1);
+    },
+  },
 };
 </script>
