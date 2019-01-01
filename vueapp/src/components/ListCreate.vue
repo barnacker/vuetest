@@ -55,7 +55,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import { log } from 'util';
+import { notEmptyRules } from '../rules';
 
 export default {
   name: 'list-create',
@@ -64,7 +64,7 @@ export default {
     cardHover: false,
     valid: false,
     list: {},
-    notEmptyRules: value => !!value || 'Cannot be empty',
+    notEmptyRules,
   }),
   computed: {
     ...mapState('lists', { creating: 'isCreatePending' }),

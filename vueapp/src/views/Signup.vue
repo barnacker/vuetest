@@ -58,6 +58,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import { notEmptyRules, validEmail } from '../rules';
 
 export default {
   name: 'signup',
@@ -71,12 +72,9 @@ export default {
       confirm_password: '',
       displayname: '',
     },
-    notEmptyRules: value => !!value || 'Cannot be empty',
+    notEmptyRules,
+    validEmail,
     confirmPasswordRules: value => value === vm.user.password || 'Password must match',
-    validEmail: (value) => {
-      const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return pattern.test(value) || 'Invalid e-mail.';
-    },
   }),
   computed: {
     ...mapState('users', { loading: 'isCreatePending' }),

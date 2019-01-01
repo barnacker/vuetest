@@ -5,7 +5,11 @@
     ripple
     @click.stop="activateCardMode"
     :color="cardHover ? 'grey lighten-1' : 'grey lighten-2'"
-    :style="'text-decoration: ' + (cardHover ? 'underline' : 'none') +'; cursor: pointer; color: ' + (cardHover ? 'black' : 'grey') +';'"
+    :style="'text-decoration: ' +
+            (cardHover ? 'underline' : 'none') +
+            '; cursor: pointer; color: ' +
+            (cardHover ? 'black' : 'grey') +
+            ';'"
     @mouseenter="cardHover = true"
     @mouseleave="cardHover = false"
   >
@@ -43,6 +47,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
+import { notEmptyRules } from '../rules';
 
 export default {
   name: 'card-create',
@@ -53,7 +58,7 @@ export default {
     card: {
       content: '',
     },
-    notEmptyRules: value => !!value || 'Cannot be empty',
+    notEmptyRules,
   }),
   computed: {
     ...mapState('cards', { creatingCard: 'isCreatePending' }),

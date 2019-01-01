@@ -80,6 +80,7 @@
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex';
 import { log } from 'util';
+import { notEmptyRules } from '../rules';
 import ListCard from '../components/ListCard.vue';
 import ListCreate from '../components/ListCreate.vue';
 
@@ -99,7 +100,7 @@ export default {
     cardMode: false,
     board: {},
     list: {},
-    notEmptyRules: value => !!value || 'Cannot be empty',
+    notEmptyRules,
   }),
   mounted() {
     this.loadBoard();

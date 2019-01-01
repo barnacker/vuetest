@@ -64,6 +64,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import { notEmptyRules } from '../rules';
 
 export default {
   name: 'board-create',
@@ -75,7 +76,7 @@ export default {
       name: '',
       background: '',
     },
-    notEmptyRules: value => !!value || 'Cannot be empty',
+    notEmptyRules,
   }),
   computed: {
     ...mapState('boards', { creating: 'isCreatePending' }),

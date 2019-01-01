@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import feathersVuex from 'feathers-vuex';
-import feathersClient from './feathers-client';
+import feathersClient from '../feathers-client';
 
 const {
   service,

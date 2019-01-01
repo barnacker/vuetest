@@ -52,6 +52,8 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
+import { log } from 'util';
+import { notEmptyRules } from '../rules';
 
 export default {
   name: 'login',
@@ -64,7 +66,7 @@ export default {
       username: '',
       password: '',
     },
-    notEmptyRules: value => !!value || 'Cannot be empty',
+    notEmptyRules,
   }),
   computed: {
     ...mapState('auth', { authenticating: 'isAuthenticatePending' }),
@@ -72,6 +74,7 @@ export default {
   methods: {
     ...mapActions('auth', ['authenticate']),
     login() {
+      log(notEmptyRules);
       if (this.valid) {
         // Authenticate with the local email/password strategy
         this.authenticate({
