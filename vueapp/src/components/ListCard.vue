@@ -1,6 +1,8 @@
 <template>
   <v-card :color="backColor" @dragover="$emit('dragOverList',$event, list)">
-    <v-container pa-3>
+    <v-container
+      :class="{ 'pa-3': $vuetify.breakpoint.xsOnly, 'pa-2': $vuetify.breakpoint.smAndUp}"
+    >
       <v-layout justify-space-between row>
         <v-flex
           xs12
@@ -15,7 +17,9 @@
           </header>
         </v-flex>
         <v-flex
-          :class="{ 'pt-2': $vuetify.breakpoint.xsOnly, 'pt-0': $vuetify.breakpoint.smAndUp, 'pr-0': $vuetify.breakpoint.smAndUp  }"
+          :class="{ 'pt-1': $vuetify.breakpoint.xsOnly,
+                  'pt-0': $vuetify.breakpoint.smAndUp,
+                  'pr-0': $vuetify.breakpoint.smAndUp  }"
         >
           <v-menu
             :close-on-content-click="false"
@@ -117,8 +121,7 @@
 <script>
 import _ from 'lodash';
 import { mapState, mapActions, mapGetters } from 'vuex';
-import { Sketch } from 'vue-color';
-import { log } from 'util';
+import { Chrome } from 'vue-color';
 import CardCreate from './CardCreate.vue';
 
 export default {
@@ -126,7 +129,7 @@ export default {
   props: ['list', 'dragOrigin', 'dragTarget'],
   components: {
     CardCreate,
-    'sketch-picker': Sketch,
+    'sketch-picker': Chrome,
   },
   data: () => ({
     //
@@ -140,12 +143,7 @@ export default {
       },
     });
   },
-  watch: {
-    // eslint-disable-next-line
-    cards() {
-      this.$emit('refreshActivities');
-    },
-  },
+
   computed: {
     ...mapState('cards', { loadingCard: 'isFindPending' }),
     ...mapGetters('cards', { findCardsInStore: 'find' }),
@@ -167,6 +165,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['addBlindActivities']),
     ...mapActions('cards', { findCards: 'find' }),
     saveList() {
       this.$emit('saveList');
@@ -174,7 +173,6 @@ export default {
     updateValue: _.debounce(({ saveList, list }) => {
       const updatedList = list;
       updatedList.color = list.color.hex8 ? list.color.hex8 : list.color;
-      console.log(updatedList);
       saveList();
     }, 500),
   },

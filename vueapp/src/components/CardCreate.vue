@@ -25,9 +25,9 @@
     </v-container>
   </v-card>
   <v-card v-else flat color="grey lighten-2" @click.stop>
-    <v-container pa-0>
+    <v-container pt-1 pl-0 pr-0 pb-1>
       <v-layout row>
-        <v-flex xs12 pl-2 pr-2>
+        <v-flex xs12 pt-1>
           <v-form ref="form" v-model="valid" @submit.prevent="createCard()">
             <v-text-field
               class="caption"

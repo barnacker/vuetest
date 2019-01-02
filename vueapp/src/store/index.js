@@ -66,15 +66,20 @@ export default new Vuex.Store({
   state: {
     activeListCreateCard: '',
     blindActivities: 0,
+    drawer: false,
   },
   mutations: {
     SET_ACTIVE_LIST_CREATE_CARD(state, listId) {
       const currentState = state;
       currentState.activeListCreateCard = listId;
     },
-    ADD_BLIND_ACTIVITIES(state) {
+    SET_DRAWER(state, drawer) {
       const currentState = state;
-      currentState.blindActivities += 1;
+      currentState.drawer = drawer;
+    },
+    ADD_BLIND_ACTIVITIES(state, number) {
+      const currentState = state;
+      currentState.blindActivities += number;
     },
     RESET_BLIND_ACTIVITIES(state) {
       const currentState = state;
@@ -85,9 +90,14 @@ export default new Vuex.Store({
     setActiveListCreateCard(context, listId) {
       context.commit('SET_ACTIVE_LIST_CREATE_CARD', listId);
     },
-    addBlindActivities(context) {
-      console.log('addBlindActivities');
-      context.commit('ADD_BLIND_ACTIVITIES');
+    setDrawer(context, drawer) {
+      if (drawer) { context.commit('RESET_BLIND_ACTIVITIES'); }
+      context.commit('SET_DRAWER', drawer);
+    },
+    addBlindActivities(context, number) {
+      if (!context.state.drawer) {
+        context.commit('ADD_BLIND_ACTIVITIES', number);
+      }
     },
     resetBlindActivities(context) {
       context.commit('RESET_BLIND_ACTIVITIES');

@@ -12,8 +12,11 @@
   >
     <v-container pa-1>
       <v-layout column>
-        <v-flex>
-          <span class="caption ma-0">Add a list...</span>
+        <v-flex v-if="$vuetify.breakpoint.xsOnly" xs12 pl-3 pb-3 pt-3>
+          <span class="headline">Add a list...</span>
+        </v-flex>
+        <v-flex v-else>
+          <span class="pa-0 caption">Add a list...</span>
         </v-flex>
       </v-layout>
     </v-container>
@@ -42,6 +45,7 @@
         </v-container>
       </v-card-title>
       <v-card-actions>
+        <v-spacer></v-spacer>
         <v-btn
           color="success"
           type="submit"

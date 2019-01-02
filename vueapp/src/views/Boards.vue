@@ -84,13 +84,12 @@ export default {
     ...mapMutations('activities', { clearActivities: 'clearAll' }),
     ...mapActions('boards', { findBoards: 'find' }),
     ...mapActions('boards', { removeBoard: 'remove' }),
-    createBoard() {
+    async createBoard() {
       if (this.valid) {
         const { Board } = this.$FeathersVuex;
         const board = new Board(this.board);
-        board.save().then(() => {
-          this.$refs.form.reset();
-        });
+        await board.save();
+        this.$refs.form.reset();
       }
     },
   },

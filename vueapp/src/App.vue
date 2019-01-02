@@ -4,7 +4,7 @@
       ref="nav"
       v-if="activities.length > 0"
       :clipped="$vuetify.breakpoint.smAndUp"
-      v-model="drawer"
+      v-model="drawerState"
       fixed
       app
       right
@@ -45,10 +45,10 @@
       app
       fixed
     >
+      <v-toolbar-side-icon v-if="backArrow" @click="back()">
+        <v-icon>arrow_back</v-icon>
+      </v-toolbar-side-icon>
       <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
-        <v-toolbar-side-icon v-if="backArrow" @click="back()">
-          <v-icon>arrow_back</v-icon>
-        </v-toolbar-side-icon>
         <span>Trello Clone</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
@@ -56,7 +56,7 @@
         <v-btn
           v-if="loadingActivities || activities.length > 0"
           icon
-          @click.stop="drawer = !drawer"
+          @click.stop="drawerState = !drawerState"
           slot="activator"
         >
           <v-progress-circular
@@ -65,7 +65,7 @@
             size="24"
             color="white"
           ></v-progress-circular>
-          <v-badge v-else left overlap color="red" v-model="blindActivities">
+          <v-badge v-else left overlap color="red" v-model="blindState">
             <span slot="badge">{{blindActivities}}</span>
             <v-icon>notifications</v-icon>
           </v-badge>
@@ -96,21 +96,25 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex';
-import { log } from 'util';
+import {
+  mapState, mapActions, mapGetters, mapMutations,
+} from 'vuex';
 
 export default {
   name: 'App',
   data: () => ({
-    drawer: false,
+    localDrawer: false,
+    firstScanActivities: false,
   }),
   watch: {
-    creatingActivity(newVal) { // watch it
-      log('creatingActivity:', newVal);
+    activities(newVal, oldVal) {
+      if (oldVal.length !== 0) {
+        this.addBlindActivities(newVal.length - oldVal.length);
+      }
     },
   },
   computed: {
-    ...mapState(['blindActivities']),
+    ...mapState(['blindActivities', 'drawer']),
     ...mapState('auth', {
       disconnecting: 'isLogoutPending',
       connected: 'user',
@@ -140,17 +144,36 @@ export default {
     backArrow() {
       return Object.keys(this.$route.params).length !== 0;
     },
+    drawerState: {
+      get() { return this.drawer; },
+      set(drawerState) { this.$store.dispatch('setDrawer', drawerState); },
+    },
+    blindState: {
+      get() { return this.blindActivities; },
+      set() {
+        // do nothing
+      },
+    },
   },
   methods: {
+    ...mapMutations('users', { clearUsers: 'clearAll' }),
+    ...mapMutations('boards', { clearBoards: 'clearAll' }),
+    ...mapMutations('lists', { clearLists: 'clearAll' }),
+    ...mapMutations('cards', { clearCards: 'clearAll' }),
+    ...mapMutations('activities', { clearActivities: 'clearAll' }),
+    ...mapActions(['setDrawer', 'addBlindActivities']),
     ...mapActions('auth', ['logout']),
-    disconnect() {
-      this.logout()
-        .then(() => {
-          this.$router.push('/');
-        })
-        .catch(() => {
-          this.$router.push('/');
-        });
+    async flushStore() {
+      await this.clearActivities();
+      await this.clearCards();
+      await this.clearLists();
+      await this.clearBoards();
+      await this.clearUsers();
+    },
+    async disconnect() {
+      await this.flushStore();
+      await this.logout();
+      this.$router.push('/');
     },
     back() {
       if (window.history.length > 2) {
