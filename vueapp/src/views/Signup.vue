@@ -2,7 +2,7 @@
   <v-container fill-height>
     <v-slide-y-transition mode="out-in">
       <v-layout align-center justify-center>
-        <v-flex xs2 class="text-xs-center">
+        <v-flex xs12 sm6 md4 class="text-xs-center">
           <v-icon x-large>face</v-icon>
           <v-form v-model="valid" @submit.prevent="signup">
             <v-text-field
@@ -53,18 +53,28 @@
         </v-flex>
       </v-layout>
     </v-slide-y-transition>
+    <error-pop
+      v-model="dialog"
+      errTitle="Authentication Error"
+      :errText="signUpErr"
+    />
   </v-container>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 import { notEmptyRules, validEmail } from '../rules';
+import ErrorPop from '../components/ErrorPop.vue';
 
 export default {
   name: 'signup',
-  // eslint-disable-next-line
+  components: {
+    ErrorPop,
+  },
   data: vm => ({
     valid: false,
+    dialog: false,
+    signUpErr: '',
     user: {
       username: '',
       email: '',
@@ -86,7 +96,10 @@ export default {
         const user = new User(this.user);
         user.save().then(() => {
           this.$router.push('/login');
-        }); // --> Creates the todo on the server.
+        }).catch((e) => {
+          this.signUpErr = e.message;
+          this.dialog = true;
+        });
       }
     },
   },

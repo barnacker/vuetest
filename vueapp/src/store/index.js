@@ -3,6 +3,8 @@ import Vuex from 'vuex';
 import feathersVuex from 'feathers-vuex';
 import feathersClient from '../feathers-client';
 
+import security from './security';
+
 const {
   service,
   auth,
@@ -15,6 +17,9 @@ Vue.use(Vuex);
 Vue.use(FeathersVuex);
 
 export default new Vuex.Store({
+  modules: {
+    security,
+  },
   plugins: [
     service('users', {
       instanceDefaults: {
@@ -35,6 +40,7 @@ export default new Vuex.Store({
         order: 0,
         boardId: '',
         archived: false,
+        color: '#E0E0E0FF',
       },
     }),
     service('cards', {
@@ -80,6 +86,7 @@ export default new Vuex.Store({
       context.commit('SET_ACTIVE_LIST_CREATE_CARD', listId);
     },
     addBlindActivities(context) {
+      console.log('addBlindActivities');
       context.commit('ADD_BLIND_ACTIVITIES');
     },
     resetBlindActivities(context) {

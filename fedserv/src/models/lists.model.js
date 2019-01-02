@@ -10,6 +10,7 @@ module.exports = function (app) {
     order: { type: Number, required: true, default: 0 },
     boardId: { type: Schema.Types.ObjectId, ref: 'boards' },
     archived: { type: Boolean, default: false },
+    color: { type: String, required: false }
   }, {
     timestamps: true
   });

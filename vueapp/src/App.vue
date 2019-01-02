@@ -49,7 +49,7 @@
         <v-toolbar-side-icon v-if="backArrow" @click="back()">
           <v-icon>arrow_back</v-icon>
         </v-toolbar-side-icon>
-        <span class="hidden-sm-and-down">Trello Clone</span>
+        <span>Trello Clone</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-tooltip bottom>

@@ -13,10 +13,13 @@
     @mouseenter="cardHover = true"
     @mouseleave="cardHover = false"
   >
-    <v-container pa-0>
+    <v-container pa-2>
       <v-layout>
-        <v-flex xs12 pl-2 pt-0 pb-0>
-          <span class="caption">Add a card...</span>
+        <v-flex v-if="$vuetify.breakpoint.xsOnly" xs12 pl-3>
+          <span class="headline">Add a card...</span>
+        </v-flex>
+        <v-flex v-else pt-0 pb-0>
+          <span class="pa-0 caption">Add a card...</span>
         </v-flex>
       </v-layout>
     </v-container>

@@ -1,24 +1,33 @@
 <template>
-  <v-card
-    :style="'color: ' + fgcolor.hex8 + ';'"
-    :color="(dragOrigin !== dragTarget && dragTarget===list._id )
-      ? 'green lighten-2'
-      : bgcolor.hex8 "
-    @dragover="$emit('dragOverList',$event, list)"
-  >
-    <v-container pa-1>
+  <v-card :color="backColor" @dragover="$emit('dragOverList',$event, list)">
+    <v-container pa-3>
       <v-layout justify-space-between row>
-        <v-flex xs12 pl-2 pt-1>
-          <h4 class="ma-0">{{list.name}}</h4>
+        <v-flex
+          xs12
+          pl-1
+          :class="{ 'pt-1': $vuetify.breakpoint.xsOnly, 'pt-0': $vuetify.breakpoint.smAndUp}"
+        >
+          <header :style="'background-color: '+ backColor">
+            <span
+              :style="'font-size:' + ($vuetify.breakpoint.xsOnly ? '1.8rem' : '1rem')"
+              class="auto-invert"
+            >{{list.name}}</span>
+          </header>
         </v-flex>
-        <v-flex pa-1>
+        <v-flex
+          :class="{ 'pt-2': $vuetify.breakpoint.xsOnly, 'pt-0': $vuetify.breakpoint.smAndUp, 'pr-0': $vuetify.breakpoint.smAndUp  }"
+        >
           <v-menu
-            v-model="menu"
             :close-on-content-click="false"
             :nudge-width="200"
             offset-x
+            :style="'background-color: '+ backColor"
           >
-            <v-icon small slot="activator">ballot</v-icon>
+            <v-icon
+              :large="$vuetify.breakpoint.xsOnly"
+              slot="activator"
+              class="auto-invert"
+            >more_horiz</v-icon>
             <v-card>
               <v-list>
                 <v-list-tile avatar>
@@ -30,35 +39,30 @@
 
                   <v-list-tile-content>
                     <v-list-tile-title>Owner</v-list-tile-title>
+                    <!-- eslint-disable-next-line -->
                     <v-list-tile-sub-title>{{ list.updatedAt | moment("from") }}</v-list-tile-sub-title>
                   </v-list-tile-content>
                 </v-list-tile>
-                <v-list-tile>
-                  <v-list-tile-content>
-                    <v-list-tile-title>Background Color</v-list-tile-title>
-                  </v-list-tile-content>
-                  <v-list-tile-action>
-                    <v-menu :close-on-content-click="false" offset-x offset-y>
-                      <v-btn icon slot="activator">
-                        <v-icon>format_color_fill</v-icon>
-                      </v-btn>
-                      <sketch-picker v-model="bgcolor"/>
-                    </v-menu>
-                  </v-list-tile-action>
-                </v-list-tile>
-                <v-list-tile>
-                  <v-list-tile-content>
-                    <v-list-tile-title>Text Color</v-list-tile-title>
-                  </v-list-tile-content>
-                  <v-list-tile-action>
-                    <v-menu :close-on-content-click="false" offset-x offset-y>
-                      <v-btn icon slot="activator">
-                        <v-icon>format_color_text</v-icon>
-                      </v-btn>
-                      <sketch-picker v-model="fgcolor"/>
-                    </v-menu>
-                  </v-list-tile-action>
-                </v-list-tile>
+                <v-card :color="backColor">
+                  <v-menu
+                    :close-on-content-click="false"
+                    offset-x
+                    offset-y
+                    pa-0
+                  >
+                    <v-btn block flat slot="activator">
+                      <span
+                        class="auto-invert"
+                        :style="'background-color: '+ backColor"
+                      >Background Color</span>
+                      <v-icon right>format_color_fill</v-icon>
+                    </v-btn>
+                    <sketch-picker
+                      v-model="list.color"
+                      @input="updateValue({ saveList: saveList, list: list })"
+                    />
+                  </v-menu>
+                </v-card>
               </v-list>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -66,7 +70,7 @@
                 <v-btn
                   flat
                   color="error"
-                  @click="menu = false, $emit('removeList',list._id)"
+                  @click="menu = false, $emit('removeList')"
                 >
                   <v-icon dark right>remove_circle</v-icon>Delete Card
                 </v-btn>
@@ -77,22 +81,30 @@
       </v-layout>
     </v-container>
     <v-container pa-0>
-      <v-layout column>
-        <v-flex v-if="loadingCard">
+      <v-layout column v-if="loadingCard">
+        <v-flex pb-4>
           <v-layout column align-center>
             <v-progress-circular indeterminate color="primary"/>
           </v-layout>
         </v-flex>
-        <v-flex v-for="card in cards" :key="card._id" pl-2 pr-2 pb-1>
+      </v-layout>
+      <v-layout column v-if="!loadingCard">
+        <v-flex v-for="card in cards" :key="card._id" ml-2 mr-2 pb-0 pt-1>
           <v-card
             draggable
             @dragstart="$emit('startDraggingCard',card)"
             @dragend="$emit('dropDraggedCard',card)"
           >
-            <v-card-title class="caption">{{card.content}}</v-card-title>
+            <v-flex
+              pa-2
+              v-if="$vuetify.breakpoint.xsOnly"
+              class="subheadings"
+            >{{card.content}}</v-flex>
+
+            <v-flex pa-1 v-else class="caption">{{card.content}}</v-flex>
           </v-card>
         </v-flex>
-        <v-flex>
+        <v-flex ml-0 mr-0 pb-0>
           <card-create
             :list="list"
             v-on:deactivateCreateMode="$emit('deactivateCreateMode')"
@@ -103,8 +115,10 @@
   </v-card>
 </template>
 <script>
+import _ from 'lodash';
 import { mapState, mapActions, mapGetters } from 'vuex';
 import { Sketch } from 'vue-color';
+import { log } from 'util';
 import CardCreate from './CardCreate.vue';
 
 export default {
@@ -116,8 +130,7 @@ export default {
   },
   data: () => ({
     //
-    bgcolor: { hex8: '#E0E0E0FF' },
-    fgcolor: { hex8: '#000000FF' },
+    pickedColor: '',
   }),
   mounted() {
     this.findCards({
@@ -145,9 +158,38 @@ export default {
       }).data;
       return retval;
     },
+    backColor() {
+      const color = this.list.color.hex8 ? this.list.color.hex8 : this.list.color;
+      // eslint-disable-next-line
+      return (this.dragOrigin !== this.dragTarget && this.dragTarget === this.list._id)
+        ? 'green lighten-2'
+        : color;
+    },
   },
   methods: {
     ...mapActions('cards', { findCards: 'find' }),
+    saveList() {
+      this.$emit('saveList');
+    },
+    updateValue: _.debounce(({ saveList, list }) => {
+      const updatedList = list;
+      updatedList.color = list.color.hex8 ? list.color.hex8 : list.color;
+      console.log(updatedList);
+      saveList();
+    }, 500),
   },
 };
 </script>
+<style>
+.auto-invert {
+  height: inherit;
+  background: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+  filter: invert(1) grayscale(1) contrast(9);
+}
+.v-menu__activator {
+  background: inherit;
+}
+</style>

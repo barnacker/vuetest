@@ -23,7 +23,6 @@
         <v-form v-model="valid" @submit.prevent @keydown.prevent.enter>
           <v-text-field
             dark
-            prepend-icon="dashboard"
             class="headline mb-0"
             solo-inverted
             v-model="board.name"
@@ -45,12 +44,12 @@
         <v-flex xs12 pa-0></v-flex>
         <v-container
           pt-0
-          grid-list-md
+          :class="{'grid-list-xl': $vuetify.breakpoint.xsOnly, 'grid-list-md': $vuetify.breakpoint.smAndUp }"
           fluid
           @click="createMode = false, setActiveListCreateCard('')"
         >
           <v-layout align-start justify-start row wrap>
-            <v-flex v-for="list in lists" :key="list._id" xs6 md2 xl1>
+            <v-flex v-for="list in lists" :key="list._id" xs12 sm3 md2 xl1>
               <list-card
                 :list="list"
                 :dragOrigin="dragOrigin"
@@ -59,11 +58,12 @@
                 v-on:startDraggingCard="startDraggingCard"
                 v-on:dropDraggedCard="dropDraggedCard"
                 v-on:dragOverList="dragOverList"
+                v-on:saveList="saveList(list)"
                 v-on:removeList="removeListTree(list)"
                 v-on:refreshActivities="debouncedLoadActivities()"
               />
             </v-flex>
-            <v-flex xs6 md2 xl1>
+            <v-flex xs12 sm3 md2 xl1>
               <list-create
                 :board="board"
                 :createMode="createMode"
@@ -163,6 +163,7 @@ export default {
     // eslint-disable-next-line
     debouncedLoadActivities: _.debounce(function () {
       this.loadActivities();
+      this.addBlindActivities();
     }, 100),
     myPatch() {
       // eslint-disable-next-line
@@ -177,12 +178,15 @@ export default {
         const { List } = this.$FeathersVuex;
         const list = new List(this.list);
         list.boardId = this.$route.params.id;
-        this.addBlindActivities();
         list.save().then(() => {
           this.$refs.form.reset();
           // this.loadActivities();
         });
       }
+    },
+    saveList(list) {
+      log('saveList');
+      list.save();
     },
     startDraggingCard(card) {
       this.dragOrigin = card.listId;
