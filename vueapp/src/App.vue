@@ -33,7 +33,9 @@
             </v-list-tile-sub-title>
           </v-list-tile-content>
           <v-list-tile-avatar>
-            <v-gravatar email="habib.tremblay@gmail.com"/>
+            <v-gravatar
+              :email="activity.user.email ? activity.user.email : ''"
+            />
           </v-list-tile-avatar>
         </v-list-tile>
       </v-list>
@@ -49,7 +51,7 @@
         <v-icon>arrow_back</v-icon>
       </v-toolbar-side-icon>
       <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
-        <span>Trello Clone</span>
+        <span>Vuetify prototype</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-tooltip bottom>
