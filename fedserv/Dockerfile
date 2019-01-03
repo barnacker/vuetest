@@ -1,4 +1,4 @@
-FROM node:9.11.1-alpine
+FROM node:current-alpine
 # copy both 'package.json' and 'package-lock.json' (if available)
 COPY package*.json ./
 # install project dependencies
@@ -10,4 +10,4 @@ COPY . .
 
 ENV NODE_ENV development
 
-CMD [ "npm", "run", "dev" ]
+CMD [ "npm", "start" ]
