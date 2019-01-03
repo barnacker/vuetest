@@ -14,4 +14,4 @@ COPY . .
 ENV NODE_ENV production
 USER node
 
-CMD ["pm2", "start", "app.js;"]
+CMD ["pm2", "start", "src/app.js;"]
