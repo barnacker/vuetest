@@ -108,6 +108,7 @@ export default {
       // eslint-disable-next-line
       if (this.board._id) {
         await this.board.patch();
+        console.log('patch');
         this.debouncedLoadActivities();
       }
     },
