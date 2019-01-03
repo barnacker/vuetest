@@ -9,6 +9,6 @@ RUN npm install --production
 # copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY . .
 # Show current folder structure in logs
-RUN ls -al -R
+#RUN ls -al -R
 
 CMD [ "pm2-runtime", "start", "pm2.json" ]
