@@ -13,4 +13,4 @@ COPY . .
 
 ENV NODE_ENV production
 
-CMD ["pm2", "start", "/app/src/app.js;"]
+CMD ["pm2-runtime", "src/app.js;"]
