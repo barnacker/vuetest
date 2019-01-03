@@ -104,10 +104,10 @@ export default {
       console.log('loadActivities');
       this.loadActivities();
     }, 100),
-    myPatch() {
+    async myPatch() {
       // eslint-disable-next-line
       if (this.board._id) {
-        this.board.patch();
+        await this.board.patch();
         this.debouncedLoadActivities();
       }
     },
