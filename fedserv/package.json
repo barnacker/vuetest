@@ -1,7 +1,7 @@
 {
-  "name": "fedserv",
+  "name": "feathers-demo",
   "description": "ferather stuff",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "homepage": "",
   "main": "src",
   "keywords": [
