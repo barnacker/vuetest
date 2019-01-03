@@ -1,7 +1,6 @@
 {
   "name": "feathers-demo",
   "script": "src/app.js",
-  "instances": "1",
   "env": {
     "NODE_ENV": "development"
   },
