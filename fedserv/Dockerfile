@@ -6,6 +6,8 @@ COPY pm2.json .
 # Install app dependencies
 ENV NPM_CONFIG_LOGLEVEL warn
 RUN npm install --production
+# copy project files and folders to the current working directory (i.e. 'app' folder)
+COPY . .
 # Show current folder structure in logs
 RUN ls -al -R
 
