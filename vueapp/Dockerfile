@@ -1,5 +1,5 @@
 # build stage
-FROM node:9.11.1-alpine as build-stage
+FROM node:current-alpine as build-stage
 # make the 'app' folder the current working directory
 WORKDIR /app
 # copy both 'package.json' and 'package-lock.json' (if available)
