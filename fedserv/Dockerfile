@@ -3,6 +3,8 @@ FROM node:9.11.1-alpine
 # make the 'app' folder the current working directory
 WORKDIR /app
 # copy both 'package.json' and 'package-lock.json' (if available)
+USER node
+
 COPY package*.json ./
 # install project dependencies
 RUN npm install
@@ -12,6 +14,5 @@ RUN npm install pm2@latest -g
 COPY . .
 
 ENV NODE_ENV production
-USER node
 
 CMD ["pm2", "start", "src/app.js;"]
