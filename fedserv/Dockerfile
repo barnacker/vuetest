@@ -12,7 +12,6 @@ RUN npm install pm2@latest -g
 COPY . .
 
 ENV NODE_ENV production
-
 USER node
 
 CMD ["pm2", "start", "app.js;"]

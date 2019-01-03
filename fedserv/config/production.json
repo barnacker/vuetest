@@ -1,4 +1,4 @@
 {
-  "host": "fedserv-app.feathersjs.com",
-  "port": "PORT"
+  "host": "vue.bewave.io",
+  "port": "3030"
 }

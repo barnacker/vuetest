@@ -41,8 +41,7 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex';
-import { log } from 'util';
+import { mapState, mapActions } from 'vuex';
 import { notEmptyRules } from '../rules';
 import ListList from '../components/ListList.vue';
 import ErrorAlert from '../components/ErrorAlert.vue';

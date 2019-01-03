@@ -33,8 +33,7 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex';
-import { log } from 'util';
+import { mapActions, mapGetters } from 'vuex';
 import { notEmptyRules } from '../rules';
 import ListCard from './ListCard.vue';
 import ListCreate from './ListCreate.vue';

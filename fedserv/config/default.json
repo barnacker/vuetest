@@ -18,9 +18,9 @@
       "header": {
         "typ": "access"
       },
-      "audience": "https://yourdomain.com",
-      "subject": "anonymous",
-      "issuer": "feathers",
+      "audience": "https://vue.bewave.io",
+      "subject": "demo",
+      "issuer": "bewave",
       "algorithm": "HS256",
       "expiresIn": "1d"
     },
@@ -30,5 +30,5 @@
       "passwordField": "password"
     }
   },
-  "mongodb": "mongodb://localhost:27017/fedserv"
+  "mongodb": "mongodb://mongo:27017/fedserv"
 }
