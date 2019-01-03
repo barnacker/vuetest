@@ -8,6 +8,6 @@ RUN npm install
 # copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY . .
 
-ENV NODE_ENV development
+ENV NODE_ENV production
 
 CMD [ "npm", "start" ]
