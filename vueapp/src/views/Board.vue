@@ -100,7 +100,7 @@ export default {
     },
     // eslint-disable-next-line
     debouncedLoadActivities: _.debounce(function () {
-      log('loadActivities');
+      console.log('loadActivities');
       this.loadActivities();
     }, 100),
     myPatch() {
