@@ -1,16 +1,12 @@
-# build stage
-FROM node:9.11.1-alpine
-# make the 'app' folder the current working directory
-WORKDIR /app
-# copy both 'package.json' and 'package-lock.json' (if available)
-COPY package*.json ./
-# install project dependencies
-RUN npm install
-# insall process manager
-RUN npm install pm2@latest -g
-# copy project files and folders to the current working directory (i.e. 'app' folder)
-COPY . .
+FROM keymetrics/pm2:latest-alpine
+# Bundle APP files
+COPY src src/
+COPY package.json .
+COPY pm2.json .
+# Install app dependencies
+ENV NPM_CONFIG_LOGLEVEL warn
+RUN npm install --production
+# Show current folder structure in logs
+RUN ls -al -R
 
-ENV NODE_ENV production
-
-CMD ["pm2-runtime", "src/app.js;"]
+CMD [ "pm2-runtime", "start", "pm2.json" ]
