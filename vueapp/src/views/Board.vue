@@ -42,7 +42,6 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import { log } from 'util';
 import { notEmptyRules } from '../rules';
 import ListList from '../components/ListList.vue';
 import ErrorAlert from '../components/ErrorAlert.vue';
@@ -71,7 +70,6 @@ export default {
   },
   watch: {
     board() {
-      console.log('board');
       this.debouncedLoadActivities();
     },
   },
@@ -101,14 +99,12 @@ export default {
     },
     // eslint-disable-next-line
     debouncedLoadActivities: _.debounce(function () {
-      console.log('loadActivities');
       this.loadActivities();
     }, 100),
     async myPatch() {
       // eslint-disable-next-line
       if (this.board._id) {
         await this.board.patch();
-        console.log('patch');
         this.debouncedLoadActivities();
       }
     },
