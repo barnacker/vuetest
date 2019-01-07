@@ -11,20 +11,19 @@
           ></v-img>
           <br>
           <h1 class="text-xs-center">
-            <br>Vous présente un prototype de "Real Time Application" avec WebSockets
-            <br>
-            <br>
-            <br>
+            <br v-if="!$vuetify.breakpoint.xsOnly">Vous présente un prototype de "Real Time Application" avec WebSockets
+            <br v-if="!$vuetify.breakpoint.xsOnly">
+            <br v-if="!$vuetify.breakpoint.xsOnly">
+            <br v-if="!$vuetify.breakpoint.xsOnly">
           </h1>
-          <v-layout align-center justify-center row fill-height>
+          <v-layout
+            align-center
+            justify-center
+            :column="$vuetify.breakpoint.xsOnly"
+          >
             <v-flex></v-flex>
             <v-flex>
-              <v-img
-                :src="require('../assets/logo.svg')"
-                class="my-3"
-                contain
-                height="200"
-              ></v-img>
+              <v-img :src="require('../assets/logo.svg')" contain height="200"></v-img>
               <h1 class="text-xs-center">Vuetify</h1>
             </v-flex>
             <v-flex>
@@ -33,7 +32,6 @@
             <v-flex>
               <v-img
                 :src="require('../assets/feathersjs.svg')"
-                class="my-3"
                 contain
                 height="200"
               ></v-img>
@@ -45,7 +43,6 @@
             <v-flex>
               <v-img
                 :src="require('../assets/mongodb.svg')"
-                class="my-3"
                 contain
                 width="200"
               ></v-img>
