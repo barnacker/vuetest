@@ -51,29 +51,28 @@
         <v-icon>arrow_back</v-icon>
       </v-toolbar-side-icon>
       <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
-        <span>Vuetify prototype</span>
+        <span>Reactive Demo</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-tooltip bottom>
-        <v-btn
-          v-if="loadingActivities || activities.length > 0"
-          icon
-          @click.stop="drawerState = !drawerState"
-          slot="activator"
-        >
-          <v-progress-circular
-            v-if="loadingActivities"
-            indeterminate
-            size="24"
-            color="white"
-          ></v-progress-circular>
-          <v-badge v-else left overlap color="red" v-model="blindState">
-            <span slot="badge">{{blindActivities}}</span>
-            <v-icon>notifications</v-icon>
-          </v-badge>
-        </v-btn>
-        <span>Activities</span>
-      </v-tooltip>
+
+      <v-btn
+        v-if="loadingActivities || activities.length > 0"
+        icon
+        @click.stop="drawerState = !drawerState"
+        slot="activator"
+      >
+        <v-progress-circular
+          v-if="loadingActivities"
+          indeterminate
+          size="24"
+          color="white"
+        ></v-progress-circular>
+        <v-badge v-else left overlap color="red" v-model="blindState">
+          <span slot="badge">{{blindActivities}}</span>
+          <v-icon>notifications</v-icon>
+        </v-badge>
+      </v-btn>
+
       <v-toolbar-items v-if="!connected">
         <v-btn flat :to="{ name: 'login' }">Login</v-btn>
         <v-btn flat :to="{ name: 'signup' }">Sign up</v-btn>
