@@ -9,7 +9,6 @@
             contain
             height="200"
           ></v-img>
-          <br>
           <h1 class="text-xs-center">
             <br v-if="!$vuetify.breakpoint.xsOnly">Vous présente un prototype de "Real Time Application" avec WebSockets
             <br v-if="!$vuetify.breakpoint.xsOnly">
