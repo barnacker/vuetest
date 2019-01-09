@@ -51,7 +51,7 @@
         <v-icon>arrow_back</v-icon>
       </v-toolbar-side-icon>
       <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
-        <span>Reactive Demo</span>
+        <span>Demo</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
 
