@@ -30,5 +30,5 @@
       "passwordField": "password"
     }
   },
-  "mongodb": "mongodb://mongo:27017/fedserv"
+  "mongodb": "mongodb://localhost:27017/fedserv"
 }
